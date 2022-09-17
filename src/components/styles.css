@@ -1,0 +1,207 @@
+/* table */
+
+table th {
+    white-space: nowrap;
+
+}
+
+table,
+th,
+td {
+    border: 1px solid;
+}
+
+.height-100 {
+    display: block;
+    max-height: 75vh;
+    height: auto;
+    position: relative;
+}
+
+.botton-end {
+    position: absolute;
+    bottom: 5%;
+    right: 60px;
+}
+
+.link {
+    text-decoration: none;
+    color: #000;
+}
+
+
+
+/* Sidebar */
+.sidebar_open {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 58px 0 0;
+    /* Height of navbar */
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+    width: 300px;
+    z-index: 1;
+}
+
+.sidebar_close {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 58px 0 0;
+    /* Height of navbar */
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+    width: 300px;
+    z-index: 1;
+}
+
+/* scroller */
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #3596d9;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #3596d9;
+}
+
+
+/* New combination */
+
+
+.table-row-add {
+    white-space: nowrap;
+}
+
+.add-table{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 95%;
+}
+.create-table{
+    width: 95%;
+    line-height: 10px;
+    margin-top: -20px;
+}
+
+.button-add{
+    background-color: #3596d9;
+    padding: 10px 15px;
+    color: #fff;
+    border: none;  
+    
+}
+.button-green{
+    background-color: #007852;
+    padding: 10px 15px;
+    color: #fff;
+    border: none;  
+    
+}
+
+.button-delete{
+    background-color:red;
+    padding: 3px 15px;
+    width: 100%;
+    height: 35px;
+    color: #fff;
+    border: none; 
+    border-bottom: 1px solid white;
+}
+
+.button-delete-disable{
+    background: transparent;
+    background: none;
+    border:none;
+    color: transparent;
+    padding: 10px 0;
+}
+
+
+.delete-button-class{
+  margin-top: 37px;
+  display:flex;
+  flex-direction: column;
+}
+
+.table-container{
+    display: flex;
+    flex-direction: row;
+}
+
+td,
+th {
+    padding: 5px;
+    border: 1px solid black;
+}
+
+
+.select-option {
+ width: 100%;
+ height: 20px;
+ border: none;
+}
+
+.select-padding{
+    border-spacing: 0;
+    padding: 0;
+    width: 100%;
+}
+
+
+.form-label {
+    text-align: right;
+    line-height: 14px;
+    padding-top: 12px;
+    padding-right: 10px;
+}
+
+
+@media only screen and (max-width:1200px) {
+    .form-label {
+        text-align: left;
+        padding-right: 5px;
+    }
+}
+
+
+
+
+
+
+
+
+@media only screen and (max-width:998px) {
+    .botton-end {
+        position: unset;
+    }
+}
+
+
+@media only screen and (max-width:768px) {
+    .form-rows{
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .form-label {
+        text-align: left;
+        padding-right: 0;
+    }
+}
