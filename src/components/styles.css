@@ -1,5 +1,9 @@
-/* table */
 
+
+
+
+/* table */
+/* 
 table th {
     white-space: nowrap;
 
@@ -9,7 +13,7 @@ table,
 th,
 td {
     border: 1px solid;
-}
+} */
 
 .height-100 {
     display: block;
@@ -19,7 +23,7 @@ td {
 }
 
 .botton-end {
-    position: absolute;
+    /* position: absolute; */
     bottom: 5%;
     right: 60px;
 }
@@ -27,6 +31,15 @@ td {
 .link {
     text-decoration: none;
     color: #000;
+    background-color: #007852;
+    width: 100%;
+    height: 100%;
+    /* display: flex; */
+}
+
+.selector{
+    background-color: #3596d9;
+    border: none;
 }
 
 
@@ -171,6 +184,24 @@ th {
     padding-top: 12px;
     padding-right: 10px;
 }
+
+/* purchase order new */
+
+.textarea{
+    width:100%;
+}
+
+.text-manually{
+    width: 100%;
+}
+
+.table-border,.table-border td,.table-border th{
+    border:1px solid rgb(193, 191, 191);
+    width: 100%;
+    padding: 9px;
+    table-layout: fixed;
+}
+
 
 
 @media only screen and (max-width:1200px) {

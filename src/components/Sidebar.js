@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,121 +8,109 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Biotech, Dvr, JoinFull, LeakAdd, ManageSearch, PersonAdd, PostAdd } from '@mui/icons-material';
-import LinkBBP from './LinkBBP';
+import { Dvr, JoinFull, LeakAdd, ManageSearch, PersonAdd, PostAdd, Store } from '@mui/icons-material';
+import styled from 'styled-components'
+import { ListItem } from '@mui/material';
+
 
 
 
 const drawerWidth = 280;
 
 function Sidebar(props) {
+
+    const Links = styled(Link)`
+    width:100%;
+    height:35px;
+    padding:4px 0 0 6px;
+    text-decoration:none;
+    color:black;
+    line-height:30px;
+    &:hover{
+        color:white;
+    `
+    const List = styled.div`
+    &:hover{
+        background-color:#3596d9;
+        color:white;
+    }
+    `
+
+
+
     const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [selector, setSelector] = useState('');
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
-//     const [selected, setSelected] = useState({backgroundColor:'none'});
-    
-//    const handleSelected = (event, index) => {
-//     if(selected ===  )
-//         setSelected({backgroundColor:'whitesmoke'})
-//    }
+    const handleSelect = (event, index) => {
+        setSelector(index)
+    }
+
+
 
 
     const drawerList = (
         <div>
-            {/* <Toolbar sx={{ backgroundColor: "#2196f3",color:"white",borderRight:"#2196f3" }}>
-                <Typography
-                    variant="h6"
-                    noWrap
-                    component="div"
-                >
-                    Billion Dashboard
-                </Typography></Toolbar> */}
+            <List>
+                <ListItem>
+                    <JoinFull />
+                    <Links to='/' >New Combination</Links>
+                </ListItem>
+            </List>
             <Divider />
             <List>
-                <Link to='/' className='link'>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <JoinFull />
-                            </ListItemIcon>
-                            <ListItemText primary="New Combination" />
-                        </ListItemButton>
-                    </ListItem>
-                </Link>
-                <Divider />
-                <Link to='/listbbp' className='link' >
-                    <ListItem disablePadding>
-                        <ListItemButton >
-                            <ListItemIcon>
-                                <LeakAdd />
-                            </ListItemIcon>
-                            <ListItemText primary="BBP" />
-                        </ListItemButton>
-                    </ListItem>
-                </Link>
-                <Divider />
-                <Link to='/inquiry' className='link' >
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <ManageSearch />
-                            </ListItemIcon>
-                            <ListItemText primary="Inquiry" />
-                        </ListItemButton>
-                    </ListItem>
-                </Link>
-                <Divider />
-                <Link to='/addnewitem' className='link'>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <PostAdd />
-                            </ListItemIcon>
-                            <ListItemText primary="Add New Item" />
-                        </ListItemButton>
-                    </ListItem>
-                </Link>
-                <Divider />
-                <Link to='/userformaddsupplier' className='link'>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <PersonAdd />
-                            </ListItemIcon>
-                            <ListItemText primary="Add Supplier" />
-                        </ListItemButton>
-                    </ListItem>
-                </Link>
-                <Divider />
-                <Link to='/ordertosupplier' className='link'>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <Dvr />
-                            </ListItemIcon>
-                            <ListItemText primary="Order To Supplier" />
-                        </ListItemButton>
-                    </ListItem>
-                </Link>
-                <Divider />
+                <ListItem>
+                    <LeakAdd />
+                    <Links to='/listbbp' >BBP</Links>
+                </ListItem>
             </List>
-
-            {/* <Divider /> */}
-
+            <Divider />
+            <List>
+                <ListItem>
+                    <ManageSearch />
+                    <Links to='/inquiry' >Inquiry</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem>
+                    <PostAdd />
+                    <Links to='/addnewitem' >Add New Item</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem>
+                    <PersonAdd /><Links to='/userformaddsupplier' >Add Supplier</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem>
+                    <Dvr /><Links to='/ordertosupplier' >Order To Supplier</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem>
+                    <Store /><Links to='/purchaseordernew' >Purchase Order New</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem >
+                    <Store />
+                    <Links to='/BullionInvoice' >Bullion Invoice</Links>
+                </ListItem>
+            </List>
+            <Divider />
         </div >
     );
 
@@ -184,7 +172,7 @@ function Sidebar(props) {
                         variant="permanent"
                         sx={{
                             display: { xs: 'none', sm: 'block' },
-                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, marginTop: "70px" },
+                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, marginTop: "64px",zIndex:"45" },
                         }}
                         open
                     >
