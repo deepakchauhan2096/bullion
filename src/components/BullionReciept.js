@@ -2,7 +2,7 @@ import React from 'react'
 import Sidebar from './Sidebar'
 import styled from 'styled-components'
 
-const BullionInvoice = () => {
+const BullionReciept = () => {
 
     const Select = styled.select`
     width:100%;
@@ -20,7 +20,7 @@ const BullionInvoice = () => {
             <Sidebar />
             <div className='container-fluid' style={{ backgroundColor: "" }}>
                 <div className="row">
-                    <p className='bg-secondary text-white py-2'>Sale Invoice</p>
+                    <p className='bg-secondary text-white py-2'>Sales Reciept</p>
                 </div>
                 <form className='p-4' >
                     <div className="container" style={{ backgroundColor: "" }}>
@@ -71,23 +71,40 @@ const BullionInvoice = () => {
                                             <td colSpan="2">XXXXXXXX</td>
                                         </tr>
                                         <tr>
-                                            <td><b>SR Number:</b></td>
+                                            <td><b>RE INVOICE CLIENT ID</b></td>
+                                            <td colSpan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>RE CLIENT ID</b></td>
+                                            <td colSpan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Invoice Number:</b></td>
                                             <td colSpan="2"></td>
                                         </tr>
                                         <tr>
                                             <td><b>SERVED BY</b></td>
-                                            <td colSpan="2"></td>
+                                            <td colSpan="2">
+                                                <select class="form-control rounded-0">
+                                                    <option>BANK</option>
+                                                    <option>CARD</option>
+                                                    <option>CASH</option>
+                                                    <option>CHEQUE</option>
+                                                    <option>EXCHANGE</option>
+                                                </select>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td><b>VAT NUMBER</b></td>
                                             <td colSpan="2">GB 372718438</td>
                                         </tr>
-                                        
+
 
                                     </tbody>
                                 </table>
 
-                                <table className="table-border">
+
+                                {/* <table className="table-border">
                                     <tbody >
                                         <tr>
                                             <td ><b>BANK</b></td>
@@ -115,69 +132,90 @@ const BullionInvoice = () => {
                                             <td></td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </table> */}
 
                             </div>
 
                         </div>
                         <div className="row">
                             <div className="col-12 g-0 ">
-                            <table className="table-border-unstable">
+                                <table className="table-border">
                                     <tbody>
                                         <tr>
-                                            <th>Product ID</th>
-                                            <th>Serial No.</th>
-                                            <th>Auto Description</th>
-                                            <th>Editable Description</th>
-                                            <th>Qty</th>
-                                            <th>Unit price</th>
-                                            <th>Gross WT</th>
-                                            <th>Total</th>
+                                            <td>1</td>
+                                            <td>Total</td>
+                                            <td>$100.00</td>
                                         </tr>
                                         <tr>
-                                            <td>Scan</td>
-                                            <td>auto</td>
-                                            <td>Auto Description</td>
-                                            <td>Auto</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>1</td>
+                                            <td>PAYMENT RECEIVED</td>
+                                            <td rowspan="4"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>PAYMENT RECEIVED</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>PAYMENT RECEIVED</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>PAYMENT RECEIVED</td>
                                         </tr>
 
-                                        <tr>
-                                            <td>Scan</td>
-                                            <td>auto</td>
-                                            <td>Auto Description</td>
-                                            <td>Auto</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12 g-0 ">
+                                <table className="table-border">
+                                    <tbody>
+                                        <tr><td rowspan="7">
+                                        </td>
+                                            <td td rowspan="7">
+                                                <table className='table-border'>
+                                                    <tbody className='table-border'>
+                                                        <tr>
+                                                            <td>
+                                                                total
+                                                            </td>
+                                                            <td>
+                                                                $100
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                total
+                                                            </td>
+                                                            <td>
+                                                                $100
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                total
+                                                            </td>
+                                                            <td>
+                                                                $100
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                total
+                                                            </td>
+                                                            <td>
+                                                                $100
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
                                         </tr>
-
                                         <tr>
-                                            <td>Scan</td>
-                                            <td>auto</td>
-                                            <td>Auto Description</td>
-                                            <td>Auto</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td ></td>
                                         </tr>
-
-                                        <tr>
-                                            <td>Scan</td>
-                                            <td>auto</td>
-                                            <td>Auto Description</td>
-                                            <td>Auto</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                       
                                     </tbody>
                                 </table>
                             </div>
@@ -189,4 +227,4 @@ const BullionInvoice = () => {
     )
 }
 
-export default BullionInvoice
+export default BullionReciept
