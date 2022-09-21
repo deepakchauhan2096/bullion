@@ -123,7 +123,7 @@ function Sidebar(props) {
 
             {/* <Divider /> */}
 
-        </div >
+        </div>
     );
 
     const container = window !== undefined ? () => window().document.body : undefined;
