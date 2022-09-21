@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { Dvr, JoinFull, LeakAdd, ManageSearch, PersonAdd, PostAdd, Store } from '@mui/icons-material';
 import styled from 'styled-components'
 import { ListItem } from '@mui/material';
-
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 
 
@@ -106,8 +106,15 @@ function Sidebar(props) {
             <Divider />
             <List>
                 <ListItem >
-                    <Store />
-                    <Links to='/BullionInvoice' >Bullion Invoice</Links>
+                    <ReceiptIcon />
+                    <Links to='/BullionInvoice' >Invoice</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem >
+                    <ReceiptIcon />
+                    <Links to='/BullionReciept' >Receipt</Links>
                 </ListItem>
             </List>
             <Divider />

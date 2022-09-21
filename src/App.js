@@ -10,6 +10,7 @@ import Inquiry from "./components/Inquiry";
 import OrderToSupplier from "./components/OrderToSupplier";
 import PurchaseNewOrder from "./components/PurchaseNewOrder";
 import BullionInvoice from "./components/BullionInvoice"
+import BullionReciept from "./components/BullionReciept";
 
 
 const drawerWidth = 280;
@@ -55,7 +56,7 @@ function App() {
             <Route path="/ordertosupplier" element={<OrderToSupplier />} />
             <Route path="/purchaseordernew" element={<PurchaseNewOrder />} />
             <Route path="/BullionInvoice" element={<BullionInvoice />} />
-
+            <Route path="/BullionReciept" element={<BullionReciept />} />
 
           </Routes>
         </Router>
