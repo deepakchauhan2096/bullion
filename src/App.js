@@ -8,6 +8,8 @@ import UseFormAddSupplier from "./components/AddSupplier";
 import AddNewItem from "./components/AddNewItem";
 import Inquiry from "./components/Inquiry";
 import OrderToSupplier from "./components/OrderToSupplier";
+import PurchaseNewOrder from "./components/PurchaseNewOrder";
+import BullionInvoice from "./components/BullionInvoice"
 
 
 const drawerWidth = 280;
@@ -25,12 +27,10 @@ function App() {
   const Section = styled.section`
   margin-top:64px;
   position:relative;
-  background-color: whitesmoke;
   height:calc(100vh - 64px);
   padding-left:${drawerWidth}px;
   @media (max-width: 600px) {
   padding-left:0;
-  margin-top:56px;
     }
   `
 
@@ -53,6 +53,10 @@ function App() {
             <Route path="/addnewitem" element={<AddNewItem />} />
             <Route path="/inquiry" element={<Inquiry />} />
             <Route path="/ordertosupplier" element={<OrderToSupplier />} />
+            <Route path="/purchaseordernew" element={<PurchaseNewOrder />} />
+            <Route path="/BullionInvoice" element={<BullionInvoice />} />
+
+
           </Routes>
         </Router>
       </Section>
