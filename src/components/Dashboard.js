@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 // import Navbar from "./Navbar";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Sidebar from "./Sidebar";
+
 const Dashboard = () => {
   const [data2, setData] = useState();
   const [formValues, setFormValues] = useState([]);
@@ -156,10 +157,10 @@ const Dashboard = () => {
   let color2;
   if (ispopular) {
     color2 = "#66cc66";
-    color = "#fff";
+    color = "#e6e6e6";
   } else {
     color = "#66cc66";
-    color2 = "#fff";
+    color2 = "#e6e6e6";
   }
   return (
     <div style={{ padding: 20 }}>
@@ -223,6 +224,7 @@ const Dashboard = () => {
       >
         Select
       </button>
+
       <button
         onClick={() => setIspopular(true)}
         style={{
@@ -232,6 +234,11 @@ const Dashboard = () => {
           background: color2,
           marginLeft: "1%",
           width: "8%",
+          borderTopLeftRadius:10,
+          borderBottomLeftRadius:10,
+          borderLeft: "1px solid black",
+          borderTop:"1px solid black",
+          borderBottom:"1px solid black",
         }}
       >
         Popular
@@ -244,6 +251,11 @@ const Dashboard = () => {
           border: "none",
           background: color,
           width: "8%",
+          borderTopRightRadius:10,
+          borderBottomRightRadius:10,
+          borderRight: "1px solid black",
+          borderTop:"1px solid black",
+          borderBottom:"1px solid black",
         }}
       >
         All
