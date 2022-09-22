@@ -23,9 +23,7 @@ td {
 }
 
 .botton-end {
-    /* position: absolute; */
-    bottom: 5%;
-    right: 60px;
+    margin: 20px 0 0 0;
 }
 
 .link {
@@ -206,6 +204,17 @@ th {
     border:px solid rgb(193, 191, 191);
     width: 100%;
     padding: 9px;
+}
+
+.bar{
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+   
+}
+
+.bar-btn{
+    cursor: pointer;
 }
 
 
