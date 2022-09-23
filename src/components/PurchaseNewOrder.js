@@ -1,4 +1,5 @@
-import React from 'react'
+import React,{useContext} from 'react'
+
 import Sidebar from './Sidebar'
 import styled from 'styled-components'
 
@@ -14,12 +15,6 @@ const PurchaseNewOrder = () => {
     padding:0;
     margin:0;
     `
-
-
-
-
-
-
 
 
     return (
@@ -46,11 +41,10 @@ const PurchaseNewOrder = () => {
                                             <td>SUPPLIER ID</td>
                                             <td>
                                                 <Select className="dropdown rounded-0" id="exampleFormControlSelect1">
-                                                    <Option>1</Option>
-                                                    <Option>2</Option>
-                                                    <Option>3</Option>
-                                                    <Option>4</Option>
-                                                    <Option>5</Option>
+                                                 <Option>1</Option>
+                                                 <Option>2</Option>
+
+                                                   
                                                 </Select>
                                             </td>
                                         </tr>

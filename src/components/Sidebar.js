@@ -11,10 +11,11 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Dashboard, Dvr, JoinFull, LeakAdd, ManageSearch, PersonAdd, PostAdd, Store } from '@mui/icons-material';
+import { Dashboard, Dvr, JoinFull, LeakAdd, ManageSearch, PersonAdd, PostAdd, Store  } from '@mui/icons-material';
 import styled from 'styled-components'
 import { ListItem } from '@mui/material';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import AddNewItems from './AddNewItems';
 import AddSuppliers from './Addsuppliers';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -131,6 +132,13 @@ function Sidebar(props) {
                 </ListItem>
             </List>
             <Divider />
+            <List>
+                <ListItem >
+                    <PersonOutlineIcon />
+                    <Links to='/clientdata' >Client</Links>
+                </ListItem>
+            </List>
+            <Divider />
         </div >
     );
 
@@ -174,6 +182,7 @@ function Sidebar(props) {
                 >
                     {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                     <Drawer
+                     style={{overflow:"auto"}}
                         container={container}
                         variant="temporary"
                         open={mobileOpen}
@@ -189,10 +198,11 @@ function Sidebar(props) {
                         {drawerList}
                     </Drawer>
                     <Drawer
+                    
                         variant="permanent"
                         sx={{
                             display: { xs: 'none', sm: 'block' },
-                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, marginTop: "64px", zIndex: "45" },
+                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, marginTop: "64px", zIndex: "45",overflowY:"scroll",height:"88vh" },
                         }}
                         open
                     >

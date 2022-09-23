@@ -12,12 +12,19 @@ import PurchaseNewOrder from "./components/PurchaseNewOrder";
 import BullionInvoice from "./components/BullionInvoice"
 import BullionReciept from "./components/BullionReciept";
 import Dashboard from "./components/Dashboard";
-
+import { dataContext } from "./helpers/context";
+import ClientData from "./components/ClientData";
 
 const drawerWidth = 280;
 
   function App() {
+    const [formValues, setFormValues] = useState([]);
+   
 
+
+
+
+// ***resize code***
   const Section = styled.section`
   margin-top:64px;
   position:relative;
@@ -29,16 +36,10 @@ const drawerWidth = 280;
   `
 
 
-
-
-
-
-
-
   return (
 
   <>
-    {/* <Sidebar /> */}
+<dataContext.Provider value={{formValues, setFormValues}}>
     <Section >
     <Router>
       <Routes>
@@ -52,9 +53,11 @@ const drawerWidth = 280;
         <Route path="/BullionInvoice" element={<BullionInvoice />} />
         <Route path="/BullionReciept" element={<BullionReciept />} />
         <Route path="/home" element={<Dashboard />} />
+        <Route path="/clientdata" element={<ClientData />} />
       </Routes>
     </Router>
   </Section>
+  </dataContext.Provider>
 </>
   );
 }

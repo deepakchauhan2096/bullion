@@ -1,16 +1,26 @@
-import React, { useEffect, useState } from "react";
-// import Navbar from "./Navbar";
+import React, { useEffect, useState, useContext } from "react";
+import { dataContext } from "../helpers/context";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Sidebar from "./Sidebar";
-
+import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [data2, setData] = useState();
-  const [formValues, setFormValues] = useState([]);
   const [hit, setHit] = useState(false);
   const [value, setValue] = useState();
   const [input, setInput] = useState("");
   const [show, setShow] = useState(false);
   const [ispopular, setIspopular] = useState(false);
+  const [agreePrice, setAgreePrice] = useState("");
+  const { setFormValues } = useContext(dataContext);
+  const { formValues } = useContext(dataContext);
+ const[extrainputs, setExtrainputs]= useState([{
+    name:"deepanshu",
+    phone:"24234234"
+
+ }])
+
+
 
   useEffect(() => {
     const alldata = () => {
@@ -63,7 +73,20 @@ const Dashboard = () => {
     console.log(input, "input");
   };
 
-  const handle_ok = () => {};
+  const handle_ok = () => {
+    console.log(formValues)
+    setFormValues((prev)=>{
+      return [{
+        ...prev[0],
+        quantity: input,
+        agreed_price: agreePrice
+      }]
+     })
+
+    setShow(false);
+    console.log(formValues)
+    navigate('/clientdata');
+  };
 
   const columns = [
     {
@@ -114,8 +137,6 @@ const Dashboard = () => {
                 marginLeft: "2%",
               }}
               onClick={() => {
-                alert(input);
-                console.log(typeof input);
                 setShow(false);
               }}
             >
@@ -234,11 +255,11 @@ const Dashboard = () => {
           background: color2,
           marginLeft: "1%",
           width: "8%",
-          borderTopLeftRadius:10,
-          borderBottomLeftRadius:10,
+          borderTopLeftRadius: 10,
+          borderBottomLeftRadius: 10,
           borderLeft: "1px solid black",
-          borderTop:"1px solid black",
-          borderBottom:"1px solid black",
+          borderTop: "1px solid black",
+          borderBottom: "1px solid black",
         }}
       >
         Popular
@@ -251,15 +272,18 @@ const Dashboard = () => {
           border: "none",
           background: color,
           width: "8%",
-          borderTopRightRadius:10,
-          borderBottomRightRadius:10,
+          borderTopRightRadius: 10,
+          borderBottomRightRadius: 10,
           borderRight: "1px solid black",
-          borderTop:"1px solid black",
-          borderBottom:"1px solid black",
+          borderTop: "1px solid black",
+          borderBottom: "1px solid black",
         }}
       >
         All
       </button>
+      <input placeholder="price" style={{width:"10%", marginLeft:"1%"}} onChange={(e) => setAgreePrice(e.target.value)} />
+      <button style={{ }}  onClick={handle_ok}>ok</button>
+
       {formValues ? (
         <DataGrid
           style={{ height: "28rem", width: "100%" }}
