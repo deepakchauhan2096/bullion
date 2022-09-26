@@ -2,6 +2,8 @@ import React,{useContext} from 'react'
 import Sidebar from './Sidebar'
 import styled from 'styled-components'
 import { dataContext } from '../helpers/context'
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+
 const ClientData = () => {
     const {formValues}= useContext(dataContext);
 console.log(formValues,"formvalues")
@@ -26,7 +28,7 @@ console.log(formValues,"formvalues")
                 <div className="row">
                     <p className='bg-secondary text-white py-2'>Client Data</p>
                 </div>
-                {formValues.map((value)=><h2>quantity: {value.quantity}, agreed price:{value.agreed_price}</h2>)}
+              
                 <form className='p-4' >
                     <div className="container" style={{ backgroundColor: "" }}>
                         <div className="row">
@@ -52,59 +54,59 @@ console.log(formValues,"formvalues")
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>First Name*</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>Surname*</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>HOUSE NAME /#</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>Address L2</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>City/Town</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>Postcode</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col">Telephone*</td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>Mobile*</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col"><b>Email*</b></td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col">Date of Birth</td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col">I.D. CHECK 1</td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col">I.D. CHECK 2</td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col">PHOTO ID</td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                         <tr>
                                             <td scope="col">ADDRESS VER.</td>
-                                            <td scope="col"></td>
+                                            <td scope="col"><input></input></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -127,11 +129,11 @@ console.log(formValues,"formvalues")
                                         </tr>
                                         <tr>
                                             <td><b>Name</b></td>
-                                            <td ></td>
+                                            <td ><input></input></td>
                                         </tr>
                                         <tr>
                                             <td><b>Surname</b></td>
-                                            <td ></td>
+                                            <td ><input></input></td>
                                         </tr>
                                         <tr>
                                             <td><b>Comments</b></td>
@@ -139,11 +141,11 @@ console.log(formValues,"formvalues")
                                         </tr>
                                         <tr>
                                             <td><b>Mobile</b></td>
-                                            <td>98xxxxxx</td>
+                                            <td><input></input></td>
                                         </tr>
                                         <tr>
                                             <td><b>Email</b></td>
-                                            <td>a@m.com</td>
+                                            <td><input></input></td>
                                         </tr>
                                         <tr>
                                             <td><b>EXP DATE(<em>office use only)</em></b></td>
@@ -164,7 +166,7 @@ console.log(formValues,"formvalues")
                         <br />
                         <div className="row">
                             <div className="col-12">
-                            <b>I consent to marketing from Muljis Jewellers by post / <em>email</em> / <em>telephone</em> / <em>whats app</em></b>
+                            <b><input type="checkbox"></input> I consent to marketing from Muljis Jewellers by post / <em>email</em> / <em>telephone</em> / <em>whats app</em></b>
                             <div className="row">
                                 <div className='col-12 border border-dark' style={{height:"200px"}}>
                                     signature

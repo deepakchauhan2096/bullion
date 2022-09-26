@@ -6,13 +6,34 @@ const axios = require("axios");
 const pool = require("./db");
 const fs = require("fs");
 
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
 let all;
+let popular;
 let metal_price;
+let bm_minted_value;
+let mj_pamp_value;
+let bbp_bv_link_price_value;
+let bbp_bv_formula_price_value;
+let bbp_pamp_link_price_value;
+let bbp_pamp_formula_value;
+
+console.log(
+  "bm_minted_value:",
+  bm_minted_value,
+  "mj_pamp_value:",
+  mj_pamp_value,
+  "bbp_bv_link_price_value",
+  bbp_bv_link_price_value,
+  "bbp_bv_formula_price_value",
+  bbp_bv_formula_price_value,
+  "bbp_pamp_link_price_value",
+  bbp_pamp_link_price_value,
+  "bbp_pamp_formula_value",
+  bbp_pamp_formula_value
+);
 
 let mj_sell_rate;
 let newcode;
@@ -40,31 +61,105 @@ const getall_data = async () => {
   }
 };
 
-app.get("/all", cors(), async (req, res) => {
+app.get("/full_products_code", cors(), async (req, res) => {
   try {
-    const alldata = await pool.query(
-      "SELECT * FROM public.new_combination_test"
-    );
+    const alldata = await pool.query("SELECT * FROM public.full_code");
     res.json(alldata);
     all = alldata.rows;
-    console.log( "ALL DATA API");
+    console.log("ALL DATA API");
   } catch (error) {
     console.log(error, "error");
   }
 });
 
-
-const live_price =async () => {
+app.get("/popular_products_code", cors(), async (req, res) => {
   try {
-    await axios.get('https://4f36-54-81-131-170.ngrok.io/liveprice').then(resp => {
-      metal_price = resp.data;
-      console.log(metal_price[0],"metal price")
-      fs.writeFileSync("datafile.json", JSON.stringify(metal_price))
-  });
+    const alldata = await pool.query(
+      "SELECT * FROM public.popular_code"
+    );
+    res.json(alldata);
+    popular = alldata.rows;
+    console.log("popular DATA API");
   } catch (error) {
-    console.log(error,"error")
+    console.log(error, "error");
   }
-  };
+});
+
+app.post("/suppliers", cors(), async (req, res) => {
+  let code = req.body.value;
+
+  try {
+    const bm_minted = await pool.query(
+      "SELECT mj_sell_rate FROM public.new_combination WHERE new_code=$1 AND supplier_name='BAIRD MINT'",
+      [code]
+    )
+
+    const mj_pamp = await pool.query(
+      "SELECT mj_sell_rate FROM new_combination WHERE new_code=$1 AND supplier_name='BOXERDOME'",
+      [code]
+    )
+
+    const bbp_bv_link_price = await pool.query(
+      "SELECT sell_price_formula FROM link_bbp_1 WHERE new_code=$1  AND supplier_name='BBP BEST VALUE'",
+      [code]
+    )
+
+    const bbp_bv_formula_price = await pool.query(
+      "SELECT bbp_sell_price_link FROM link_bbp_1 WHERE new_code=$1  AND supplier_name='BBP BEST VALUE'",
+      [code]
+    )
+
+    const bbp_pamp_link_price = await pool.query(
+      "SELECT bbp_sell_price_link FROM link_bbp_1 WHERE new_code=$1 AND supplier_name='BBP PAMP'",
+      [code]
+    )
+
+    const bbp_pamp_formula = await pool.query(
+      "SELECT sell_price_formula FROM link_bbp_1 WHERE new_code=$1 AND supplier_name='BBP PAMP'",
+      [code]
+    )
+
+    bm_minted_value = bm_minted.rows;
+    mj_pamp_value = mj_pamp.rows;
+    bbp_bv_link_price_value = bbp_bv_link_price.rows;
+    bbp_bv_formula_price_value = bbp_bv_formula_price.rows;
+    bbp_pamp_link_price_value = bbp_pamp_link_price.rows;
+    bbp_pamp_formula_value = bbp_pamp_formula.rows;
+
+
+    console.log(
+      "bm_minted_value:",
+      bm_minted_value,
+      "mj_pamp_value:",
+      mj_pamp_value,
+      "bbp_bv_link_price_value",
+      bbp_bv_link_price_value,
+      "bbp_bv_formula_price_value",
+      bbp_bv_formula_price_value,
+      "bbp_pamp_link_price_value",
+      bbp_pamp_link_price_value,
+      "bbp_pamp_formula_value",
+      bbp_pamp_formula_value
+    );
+  } catch (error) {
+    res.send(error)
+  }
+  res.send([ bm_minted_value ,  mj_pamp_value ,bbp_bv_link_price_value,bbp_bv_formula_price_value, bbp_pamp_formula_value,bbp_pamp_link_price_value]);
+});
+
+const live_price = async () => {
+  try {
+    await axios
+      .get("https://4f36-54-81-131-170.ngrok.io/liveprice")
+      .then((resp) => {
+        metal_price = resp.data;
+        console.log(metal_price[0], "metal price");
+        fs.writeFileSync("datafile.json", JSON.stringify(metal_price));
+      });
+  } catch (error) {
+    console.log(error, "error");
+  }
+};
 
 const update = async () => {
   try {
@@ -80,7 +175,7 @@ const update = async () => {
 
 const update_test = async (e) => {
   await getall_data();
-  await live_price()
+  await live_price();
   all?.forEach((value) => {
     newcode = value.new_code;
     fine_troy_ounce = rouundoff(
@@ -101,7 +196,7 @@ const update_test = async (e) => {
 
 setInterval(() => {
   update_test();
-}, 30000);
+}, 90000);
 
 app.listen(port, () => {
   console.log(`listining at port ${port}`);

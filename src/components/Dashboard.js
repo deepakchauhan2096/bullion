@@ -2,10 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 import { dataContext } from "../helpers/context";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Sidebar from "./Sidebar";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [data2, setData] = useState();
+  const [alllist, setAllList] = useState();
+  const [popularlist, setPopularList] = useState();
   const [hit, setHit] = useState(false);
   const [value, setValue] = useState();
   const [input, setInput] = useState("");
@@ -14,26 +15,40 @@ const Dashboard = () => {
   const [agreePrice, setAgreePrice] = useState("");
   const { setFormValues } = useContext(dataContext);
   const { formValues } = useContext(dataContext);
- const[extrainputs, setExtrainputs]= useState([{
-    name:"deepanshu",
-    phone:"24234234"
-
- }])
-
-
 
   useEffect(() => {
-    const alldata = () => {
-      fetch("http://localhost:4000/all")
+    const allListdata = () => {
+      fetch("http://localhost:4000/full_products_code")
         .then((res) => res.json())
-        .then((data) => setData(data.rows));
-      console.log(data2, "all data");
+        .then((data) =>
+          setAllList(
+            data.rows.filter((value) => {
+              return value.product_code != null;
+            })
+          )
+        );
     };
-    alldata();
+    allListdata();
+
+    const populardata = () => {
+      fetch("http://localhost:4000/popular_products_code")
+        .then((res) => res.json())
+        .then((data) =>
+          setPopularList(
+            data.rows.filter((value) => {
+              return value.product_code != null;
+            })
+          )
+        );
+      console.log(popularlist, "popular product list");
+    };
+    populardata();
 
     const interval = setInterval(() => {
       setHit(true);
     }, 300000);
+
+    console.log(alllist, "all products list");
 
     return () => clearInterval(interval);
   }, []);
@@ -50,43 +65,45 @@ const Dashboard = () => {
     console.log(formValues);
   };
 
-  const change_value = () => {
-    console.log(value, "value");
-    if (value) {
-      if (formValues?.find((o) => o.new_code === value)) {
-        alert("Product is selected, please choose diffrent product");
-      } else {
-        var one_row = data2.find((o) => o.new_code === value);
-        console.log(one_row, "one roww");
+  const change_value = async () => {
+    console.log(value, " list value");
+    const response = await fetch('http://localhost:4000/suppliers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ value:value }),
+    });
+    const body = await response.text()
+    console.log(body,"body")
 
-        setFormValues([...formValues, one_row]);
-        console.log(formValues);
+    // if (value) {
+    //   if (formValues?.find((o) => o.new_code === value)) {
+    //     alert("Product is selected, please choose diffrent product");
+    //   } else {
+    //     var one_row = alllist.find((o) => o.new_code === value);
+    //     console.log(one_row, "one roww");
+
+    //     setFormValues([...formValues, one_row]);
+    //     console.log(formValues);
+    //   }
+    // } else {
+    //   alert("Please select a valid option");
+    // }
+  };
+
+  const handle_input = (value, cellValues) => {
+    const newArr = formValues.map((obj) => {
+      if (obj.new_code === cellValues.new_code) {
+        return { ...obj, quant: value };
       }
-    } else {
-      alert("Please select a valid option");
-    }
+      return obj;
+    });
+
+    console.log(newArr, "newarr");
   };
 
-  const handle_input = (value) => {
-    setShow(true);
-    setInput(value);
-    console.log(input, "input");
-  };
-
-  const handle_ok = () => {
-    console.log(formValues)
-    setFormValues((prev)=>{
-      return [{
-        ...prev[0],
-        quantity: input,
-        agreed_price: agreePrice
-      }]
-     })
-
-    setShow(false);
-    console.log(formValues)
-    navigate('/clientdata');
-  };
+  const handle_ok = (cellValues) => {};
 
   const columns = [
     {
@@ -95,7 +112,7 @@ const Dashboard = () => {
       renderCell: (cellValues) => (
         <button
           style={{
-            padding: 10,
+            padding: 5,
             background: "#ff3d3d",
             color: "#fff",
             borderRadius: 10,
@@ -122,27 +139,9 @@ const Dashboard = () => {
       renderCell: (cellValues) => (
         <>
           <input
-            style={{ width: "70%", height: "50%" }}
-            onChange={(e) => handle_input(e.target.value)}
-          />{" "}
-          {show && input.length > 0 ? (
-            <button
-              style={{
-                padding: 1,
-                background: "#fff",
-                color: "#fff",
-                borderRadius: 1,
-                height: "60%",
-                width: "20%",
-                marginLeft: "2%",
-              }}
-              onClick={() => {
-                setShow(false);
-              }}
-            >
-              ✔️
-            </button>
-          ) : null}
+            style={{ width: "70%", height: "60%" }}
+            onChange={(e) => handle_input(e.target.value, cellValues.row)}
+          />
         </>
       ),
     },
@@ -170,7 +169,6 @@ const Dashboard = () => {
   const rows = formValues?.map((row) => ({
     new_code: row.new_code,
     supplier_id: row.supplier_id,
-
     mj_sell_rate: row.mj_sell_rate,
   }));
 
@@ -204,9 +202,11 @@ const Dashboard = () => {
           <option selected disabled>
             Popular Option
           </option>
-          <option value="M500 BM">M500 BM</option>
-          <option value="M10 OZ BM">M10 OZ BM</option>
-          <option value="C10 OZ BM">C10 OZ BM</option>
+          {popularlist?.map((value) => (
+            <>
+              <option value={value.product_code}>{value.product_code}</option>
+            </>
+          ))}
         </select>
       ) : (
         <select
@@ -225,9 +225,9 @@ const Dashboard = () => {
           <option selected disabled>
             All Option
           </option>
-          {data2?.map((value) => (
+          {alllist?.map((value) => (
             <>
-              <option value={value.new_code}>{value.new_code}</option>
+              <option value={value.product_code}>{value.product_code}</option>
             </>
           ))}
         </select>
@@ -236,7 +236,7 @@ const Dashboard = () => {
       <button
         onClick={change_value}
         style={{
-          padding: 8,
+          padding: 5,
           color: "#fff",
           background: "#267ED4",
           border: "none",
@@ -249,7 +249,7 @@ const Dashboard = () => {
       <button
         onClick={() => setIspopular(true)}
         style={{
-          padding: 8,
+          padding: 5,
           color: "#000",
           border: "none",
           background: color2,
@@ -267,7 +267,7 @@ const Dashboard = () => {
       <button
         onClick={() => setIspopular(false)}
         style={{
-          padding: 8,
+          padding: 5,
           color: "#000",
           border: "none",
           background: color,
@@ -281,8 +281,25 @@ const Dashboard = () => {
       >
         All
       </button>
-      <input placeholder="price" style={{width:"10%", marginLeft:"1%"}} onChange={(e) => setAgreePrice(e.target.value)} />
-      <button style={{ }}  onClick={handle_ok}>ok</button>
+      <input
+        placeholder="Price"
+        style={{ width: "10%", marginLeft: "1%", padding: 3, borderRadius: 10 }}
+        onChange={(e) => setAgreePrice(e.target.value)}
+      />
+      <button
+        style={{
+          border: "none",
+          marginLeft: "0.5%",
+          background: "#267ED4",
+          color: "#fff",
+          padding: 5,
+          width: "5%",
+          borderRadius: 10,
+        }}
+        onClick={handle_ok}
+      >
+        ok
+      </button>
 
       {formValues ? (
         <DataGrid
