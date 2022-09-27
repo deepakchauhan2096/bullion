@@ -208,50 +208,12 @@ const NewCombination = () => {
           fontFamily: "roboto",
           border: "none",
         }}
-        onClick={live_price}
+        // onClick={live_price}
       >
         Fetch live price
       </button>
 
-      <h2>Current Bid and Offer Prices</h2>
-                {/* <table className="table-border-unstable" >
 
-                    <tr>
-
-                        <th>Metal</th>
-
-                        <th colspan="2">GBP</th><th colspan="2">EUR</th><th colspan="2">USD</th><th colspan="2">AUD</th><th colspan="2">SGD</th>
-                    </tr>
-
-                    <tr>
-
-                        <td>&nbsp;</td>
-
-                        <th>Bid</th><th>Offer</th><th>Bid</th><th>Offer</th><th>Bid</th><th>Offer</th><th>Bid</th><th>Offer</th><th>Bid</th><th>Offer</th>
-                    </tr>
-
-                        <tr>
-
-    <th>Gold</th>
-
-    <td className="bg-primary text-light">1,459.25</td><td className="bg-primary text-light" >1,461.85</td><td className="bg-danger text-light" >1,667.55</td><td className="bg-danger text-light" >1,669.65</td><td className="bg-danger text-light" >1,664.41</td><td className="bg-danger text-light" >1,666.36</td><td className="bg-primary text-light" >2,487.83</td><td className="bg-primary text-light" >2,489.86</td><td className="bg-danger text-light" >2,344.67</td><td className="bg-danger text-light" >2,346.84</td></tr>    <tr>
-
-    <th>Silver</th>
-
-    <td className="bg-primary text-light" >16.63</td><td>16.74</td><td>19.00</td><td>19.12</td><td>18.97</td><td>19.05</td><td className="bg-primary text-light" >28.36</td><td className="bg-primary text-light" >28.45</td><td className="bg-danger text-light" >26.72</td><td className="bg-danger text-light" >26.81</td></tr>    <tr>
-
-    <th>Platinum</th>
-
-    <td className="bg-danger text-light" >777.00</td><td className="bg-danger text-light" >780.75</td><td className="bg-danger text-light" >888.00</td><td className="bg-danger text-light" >891.75</td><td className="bg-danger text-light" >886.70</td><td className="bg-danger text-light" >890.10</td><td className="bg-danger text-light" >1,325.10</td><td className="bg-danger text-light" >1,330.40</td><td className="bg-danger text-light" >1,248.15</td><td className="bg-danger text-light" >1,252.35</td></tr>    <tr>
-
-    <th>Palladium</th>
-
-    <td className="bg-primary text-light" >1,837.50</td><td className="bg-primary text-light" >1,850.75</td><td className="bg-danger text-light" >2,099.25</td><td className="bg-danger text-light" >2,114.25</td><td className="bg-danger text-light" >2,095.70</td><td className="bg-danger text-light" >2,110.20</td><td className="bg-primary text-light" >3,131.60</td><td className="bg-primary text-light" >3,152.75</td><td className="bg-danger text-light" >2,936.95</td><td className="bg-danger text-light" >2,981.10</td></tr>    <tr>
-
-    <th>Rhodium</th>
-
-    <td className="bg-primary text-light" >9,206.00</td><td className="bg-primary text-light" >12,716.00</td><td>10,520.00</td><td>14,529.00</td><td>10,500.00</td><td>14,500.00</td><td className="bg-primary text-light" >15,692.00</td><td className="bg-primary text-light" >21,672.00</td><td>14,791.00</td><td>20,424.00</td></tr>
-                </table> */}
      <br />
      <Divider sx={{backgroundColor:"black",}}/>
      <br />
@@ -273,76 +235,7 @@ const NewCombination = () => {
       )}
       <div className="container-fluid add-table g-0 table-container">
         <div className=" overflow-scroll">
-          {/* <table className="table-row-add">
-            <tr>
-              <th>
-                {" "}
-                <select
-                  style={{
-                    color: "black",
-                    fontSize: 20,
-                    width: 200,
-                    height: 40,
-                    border: "2px solid orange",
-                  }}
-                  onChange={(e) => change_value(e.target.value)}
-                  className="select-option"
-                >
-                 
-                  {data2?.map((value) => (
-     <option value={value.new_code}>{value.new_code}</option>
-  ))}
-                </select>{" "}
-              </th>
-              <th>NEW CODE </th>
-              <th>SUPPLIER NAME</th>
-              <th>BAR COIN</th>
-              <th>METAL TYPE</th>
-              <th>BAR/COIN TYPE -CAST / MINT</th>
-              <th>description</th>
-              <th>GROSS Weight (Grams)</th>
-              <th>Fineness</th>
-              <th>FINE Troy Ounce Gold /SILVER Content (OZ)</th>
-              <th>BRAND NAME</th>
-              <th>Weight (Grams)FINE WT</th>
-              <th>Troy Ounce Gold Content (OZ)</th>
-              <th>BBP %ON METAL COST FORMULA</th>
-              <th>SELL PRICE FORMULA BASED</th>
-              <th>BBP LINK </th>
-              <th>BBP SELL PRICE LINK BBP SELL PRICE LINK </th>
-              <th>BBP MARGIN on LIVE LINK BASIS</th>
-              <th>PPB BM INTERNAL USE</th>
-            </tr>
-
-            {formValues.map((element, index) => (
-              <tr>
-                <button
-                  className="button-delete"
-                  onClick={() => delete_image(element)}
-                >
-                  remove
-                </button>
-                <td>{element.new_code}</td>
-                <td>{element.supplier_name}</td>
-                <td>{element.bar_coin}</td>
-                <td>{element.metal_type}</td>
-                <td>{element.bar_cast_mint_type}</td>
-                <td>{element.discription}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            ))}
-          </table> */}
+        
         </div>
         <div className="delete-button-class"></div>
       </div>

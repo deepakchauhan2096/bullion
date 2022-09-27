@@ -8,13 +8,15 @@ const Dashboard = () => {
   const [alllist, setAllList] = useState();
   const [popularlist, setPopularList] = useState();
   const [hit, setHit] = useState(false);
-  const [value, setValue] = useState();
-  const [input, setInput] = useState("");
   const [show, setShow] = useState(false);
   const [ispopular, setIspopular] = useState(false);
   const [agreePrice, setAgreePrice] = useState("");
   const { setFormValues } = useContext(dataContext);
   const { formValues } = useContext(dataContext);
+  const [body, setBody] = useState([]);
+
+  let finalArray = [];
+  let value2;
 
   useEffect(() => {
     const allListdata = () => {
@@ -58,48 +60,56 @@ const Dashboard = () => {
     console.log("element", cellValues);
     to_Delete = cellValues;
     console.log(to_Delete, "to delete");
-    var filteredArray = formValues.filter(function (e) {
-      return e.new_code !== to_Delete.new_code;
+    var filteredArray = body.filter(function (e) {
+      return e.code !== to_Delete.code;
     });
-    setFormValues(filteredArray);
+    setBody(filteredArray);
     console.log(formValues);
   };
 
-  const change_value = async () => {
-    console.log(value, " list value");
-    const response = await fetch('http://localhost:4000/suppliers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ value:value }),
+  const insertObject = (jsonbody) => {
+    finalArray = [...finalArray, jsonbody];
+    setBody((prev) => {
+      return [...prev, jsonbody];
     });
-    const body = await response.text()
-    console.log(body,"body")
+    console.log(finalArray, "final");
+    console.log(body, "state value");
+    setShow(false)
+  };
 
-    // if (value) {
-    //   if (formValues?.find((o) => o.new_code === value)) {
-    //     alert("Product is selected, please choose diffrent product");
-    //   } else {
-    //     var one_row = alllist.find((o) => o.new_code === value);
-    //     console.log(one_row, "one roww");
+  const change_value = async () => {
 
-    //     setFormValues([...formValues, one_row]);
-    //     console.log(formValues);
-    //   }
-    // } else {
-    //   alert("Please select a valid option");
-    // }
+
+    if (value2) {
+      if (body?.find((o) => o.code === value2)) {
+        alert("Product is selected, please choose diffrent product");
+      } else {
+        setShow(true)
+        console.log(value2, " list value");
+        const response = await fetch("http://localhost:4000/suppliers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ value: value2 }),
+        });
+        const body = await response.text();
+        const jsonbody = JSON.parse(body);
+        insertObject(jsonbody);
+      }
+    } else {
+      alert("Please select a valid option");
+    }
   };
 
   const handle_input = (value, cellValues) => {
-    const newArr = formValues.map((obj) => {
-      if (obj.new_code === cellValues.new_code) {
+    const newArr = body.map((obj) => {
+      if (obj.code === cellValues.code) {
         return { ...obj, quant: value };
       }
       return obj;
     });
-
+  setBody(newArr)
     console.log(newArr, "newarr");
   };
 
@@ -126,14 +136,14 @@ const Dashboard = () => {
         </button>
       ),
     },
-    { field: "new_code", headerName: "new_code", width: 120 },
-    { field: "discription", headerName: "discription", width: 120 },
+    { field: "code", headerName: "new_code", width: 120 },
+    { field: "description", headerName: "discription", width: 120 },
 
-    { field: "mj_sell_rate", headerName: "BM MINTED", width: 120 },
+    { field: "bm_minted_value", headerName: "BM MINTED", width: 120 },
     { field: "1", headerName: "BM CAST", width: 120 },
-    { field: "2", headerName: "MJ PAMP", width: 120 },
+    { field: "mj_pamp_value", headerName: "MJ PAMP", width: 120 },
     {
-      field: "select",
+      field: "quantity",
       headerName: "QNT",
       width: 180,
       renderCell: (cellValues) => (
@@ -145,14 +155,27 @@ const Dashboard = () => {
         </>
       ),
     },
-    { field: "3", headerName: "BBP BV LINK PRICE", width: 120 },
+    { field: "quant", headerName: "QNT Value", width: 120 },
     {
-      field: "4",
+      field: "bbp_bv_link_price_value",
+      headerName: "BBP BV LINK PRICE",
+      width: 120,
+    },
+    {
+      field: "bbp_bv_formula_price_value",
       headerName: "BBP PAMP FORMULA PRICE",
       width: 120,
     },
-    { field: "5", headerName: "BBP PAMP LINK PRICE", width: 120 },
-    { field: "6", headerName: "BBP PAMP FORMULA", width: 120 },
+    {
+      field: "bbp_pamp_link_price_value",
+      headerName: "BBP PAMP LINK PRICE",
+      width: 120,
+    },
+    {
+      field: "bbp_pamp_formula_value",
+      headerName: "BBP PAMP FORMULA",
+      width: 120,
+    },
     { field: "7", headerName: "GBS BV", width: 120 },
     { field: "8", headerName: "GBS UMICO", width: 120 },
     { field: "9", headerName: "GBS PAMP", width: 120 },
@@ -160,16 +183,22 @@ const Dashboard = () => {
     { field: "11", headerName: "OTHER C PAMP", width: 120 },
     { field: "12", headerName: "BM MINTED TABLE ", width: 120 },
     {
-      field: "uplift_fixed_price",
+      field: "13",
       headerName: "BM COST TABLE",
       width: 120,
     },
   ];
 
-  const rows = formValues?.map((row) => ({
-    new_code: row.new_code,
-    supplier_id: row.supplier_id,
-    mj_sell_rate: row.mj_sell_rate,
+  const rows = body?.map((row) => ({
+    code: row.code,
+    description: row.description,
+    bm_minted_value: row.bm_minted_value,
+    mj_pamp_value: row.mj_pamp_value,
+    bbp_bv_link_price_value: row.bbp_bv_link_price_value,
+    bbp_bv_formula_price_value: row.bbp_bv_formula_price_value,
+    bbp_pamp_link_price_value: row.bbp_pamp_link_price_value,
+    bbp_pamp_formula_value: row.bbp_pamp_formula_value,
+    quant:row.quant
   }));
 
   let color;
@@ -185,6 +214,7 @@ const Dashboard = () => {
     <div style={{ padding: 20 }}>
       {/* <Navbar /> */}
       <Sidebar />
+     
       {ispopular ? (
         <select
           style={{
@@ -196,8 +226,8 @@ const Dashboard = () => {
             borderRadius: 15,
             margin: 4,
           }}
-          onChange={(e) => setValue(e.target.value)}
-          className="select-option"
+          onChange={(e) => (value2 = e.target.value)}
+          // className="select-option"
         >
           <option selected disabled>
             Popular Option
@@ -219,7 +249,7 @@ const Dashboard = () => {
             borderRadius: 15,
             margin: 4,
           }}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => (value2 = e.target.value)}
           className="select-option"
         >
           <option selected disabled>
@@ -300,17 +330,18 @@ const Dashboard = () => {
       >
         ok
       </button>
-
-      {formValues ? (
-        <DataGrid
+      {body ? (
+        <>
+        {!show?<DataGrid
           style={{ height: "28rem", width: "100%" }}
           rows={rows}
           columns={columns}
           pageSize={20}
-          getRowId={(row) => row.supplier_id}
+          getRowId={(row) => row.code}
           rowsPerPageOptions={[20]}
           components={{ Toolbar: GridToolbar }}
-        />
+        />:<center style={{marginTop:'20%'}}><h6>Fetching data from api...</h6></center>}
+        </>
       ) : (
         <center>
           <h2>Loading.... </h2>
