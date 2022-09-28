@@ -8,7 +8,13 @@ const fs = require("fs");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 let all;
 let full_code;
@@ -56,10 +62,67 @@ app.get("/all", cors(), async (req, res) => {
     const alldata = await pool.query(
       "SELECT * FROM public.new_combination_test"
     );
-    res.json(alldata)
+    res.json(alldata);
 
     console.log(all, "set running");
   } catch (error) {
+    console.log(error, "error");
+  }
+});
+
+app.get("/all_suppliers", cors(), async (req, res) => {
+  try {
+    console.log("all data req send...");
+    const alldata = await pool.query(
+      "SELECT supplier_id , supplier_name, supplier_email, phone_1, phone_2 FROM public.add_supplier_form"
+    );
+    res.json(alldata);
+    console.log( "set running");
+  } catch (error) {
+    res.send(error)
+    console.log(error, "error");
+  }
+});
+
+app.post("/add_suppliers", cors(), async (req, res) => {
+  const supplier_data = req.body;
+  console.log(supplier_data, "supplier");
+  try {
+    console.log(supplier_data, "suppliers data req send...");
+    const alldata = await pool.query(
+      "INSERT INTO public.add_supplier_form (supplier_name,supplier_email, phone_1,phone_2) VALUES( $1,$2,$3,$4);",
+      [
+        supplier_data.name,
+        supplier_data.email,
+        supplier_data.phone_1,
+        supplier_data.phone_2,
+      ]
+    );
+    res.send(alldata);
+  } catch (error) {
+    res.send(error);
+    console.log(error, "error");
+  }
+});
+
+app.post("/update_suppliers", cors(), async (req, res) => {
+  const supplier_data = req.body;
+  console.log(supplier_data, "supplier");
+  try {
+    console.log(supplier_data, "suppliers data req send...");
+    const alldata = await pool.query(
+      "UPDATE public.add_supplier_form SET supplier_name =$1, supplier_email =$2,  phone_1 =$3,phone_2 = $4 WHERE supplier_id =$5",
+      [
+        supplier_data.name,
+        supplier_data.email,
+        supplier_data.phone_1,
+        supplier_data.phone_2,
+        supplier_data.supplier_id,
+      ]
+    );
+    res.send(alldata);
+  } catch (error) {
+    res.send(error);
     console.log(error, "error");
   }
 });

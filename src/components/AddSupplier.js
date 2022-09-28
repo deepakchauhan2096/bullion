@@ -8,10 +8,10 @@ const UserFormAddSupplier = () => {
   return (
     <>
       <Sidebar />
-      <div className='container-fluid' style={{ display: "flex" }}>
+      {/* <div className='container-fluid' style={{ display: "flex" }}> */}
         {/* <AddNewItems /> */}
         <AddSuppliers />
-      </div>
+      {/* </div> */}
     </>
   )
 }

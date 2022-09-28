@@ -64,7 +64,7 @@ const Dashboard = () => {
       return e.code !== to_Delete.code;
     });
     setBody(filteredArray);
-    console.log(formValues);
+    console.log(body);
   };
 
   const insertObject = (jsonbody) => {
@@ -113,7 +113,9 @@ const Dashboard = () => {
     console.log(newArr, "newarr");
   };
 
-  const handle_ok = (cellValues) => {};
+  const handle_ok = () => {
+    navigate('/')
+  };
 
   const columns = [
     {
@@ -145,36 +147,36 @@ const Dashboard = () => {
     {
       field: "quantity",
       headerName: "QNT",
-      width: 180,
+      width: 120,
       renderCell: (cellValues) => (
         <>
           <input
-            style={{ width: "70%", height: "60%" }}
+            style={{ width: "100%", height: "60%" }}
             onChange={(e) => handle_input(e.target.value, cellValues.row)}
           />
         </>
       ),
     },
-    { field: "quant", headerName: "QNT Value", width: 120 },
+    { field: "quant", headerName: "QNT Value", width: 80 },
     {
       field: "bbp_bv_link_price_value",
       headerName: "BBP BV LINK PRICE",
-      width: 120,
+      width: 150,
     },
     {
       field: "bbp_bv_formula_price_value",
       headerName: "BBP PAMP FORMULA PRICE",
-      width: 120,
+      width: 160,
     },
     {
       field: "bbp_pamp_link_price_value",
       headerName: "BBP PAMP LINK PRICE",
-      width: 120,
+      width: 150,
     },
     {
       field: "bbp_pamp_formula_value",
       headerName: "BBP PAMP FORMULA",
-      width: 120,
+      width: 150,
     },
     { field: "7", headerName: "GBS BV", width: 120 },
     { field: "8", headerName: "GBS UMICO", width: 120 },
