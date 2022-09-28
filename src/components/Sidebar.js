@@ -11,10 +11,13 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Dvr, JoinFull, LeakAdd, ManageSearch, PersonAdd, PostAdd, Store } from '@mui/icons-material';
+import { Dashboard, Dvr, JoinFull, LeakAdd, ManageSearch, PersonAdd, PostAdd, Store } from '@mui/icons-material';
 import styled from 'styled-components'
 import { ListItem } from '@mui/material';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import AddNewItems from './AddNewItems';
+import AddSuppliers from './Addsuppliers';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 
 
@@ -59,6 +62,13 @@ function Sidebar(props) {
     const drawerList = (
         <div>
             <List>
+                <ListItem >
+                    <Dashboard />
+                    <Links to='/home' >Dashboard</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
                 <ListItem>
                     <JoinFull />
                     <Links to='/' >New Combination</Links>
@@ -74,8 +84,9 @@ function Sidebar(props) {
             <Divider />
             <List>
                 <ListItem>
-                    <ManageSearch />
-                    <Links to='/inquiry' >Inquiry</Links>
+                    <PersonAdd />
+                    {/* <AddSuppliers /> */}
+                    <Links to='/userformaddsupplier' >Add Supplier</Links>
                 </ListItem>
             </List>
             <Divider />
@@ -83,12 +94,14 @@ function Sidebar(props) {
                 <ListItem>
                     <PostAdd />
                     <Links to='/addnewitem' >Add New Item</Links>
+                    {/* <AddNewItems /> */}
                 </ListItem>
             </List>
             <Divider />
             <List>
                 <ListItem>
-                    <PersonAdd /><Links to='/userformaddsupplier' >Add Supplier</Links>
+                    <ManageSearch />
+                    <Links to='/inquiry' >Inquiry</Links>
                 </ListItem>
             </List>
             <Divider />
