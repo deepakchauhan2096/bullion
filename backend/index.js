@@ -16,7 +16,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-let all;
+let all; //  all data from new combination
+let all_LinkBBP;  // all data from link BBP
 let full_code;
 let popular;
 let metal_price;
@@ -30,13 +31,24 @@ let bbp_pamp_formula_value;
 
 let testarr = {};
 
-let mj_sell_rate;
+// all calculaed values for new combination.
+let mj_sell_rate; 
 let newcode;
 let troyounce_gold;
 let fine_troy_ounce;
 let gross_weight;
 let fineness;
 let fine_weight;
+
+// all calculaed values for link bbp.
+let mj_sell_rate_linkBBP; 
+let newcode_linkBBP;
+let troyounce_gold_linkBBP;
+let fine_troy_ounce_linkBBP;
+let gross_weight_linkBBP;
+let fineness_linkBBP;
+let fine_weight_linkBBP;
+
 
 const rouundoff = (value) => {
   var return_value = Math.round((value + Number.EPSILON) * 100) / 100;
@@ -49,8 +61,14 @@ const getall_data = async () => {
     const alldata = await pool.query(
       "SELECT * FROM public.new_combination_test"
     );
+    const alldata_linkBBP = await pool.query(
+      "SELECT * FROM public.link_bbp_test"
+    );
+    all_LinkBBP= alldata_linkBBP.rows;
     all = alldata.rows;
     console.log(all, "set running");
+    console.log(all_LinkBBP, "link bbp data");
+
   } catch (error) {
     console.log(error, "error");
   }
@@ -226,15 +244,32 @@ const live_price = async () => {
   }
 };
 
+app.get("/liveprice", cors(), async(req, res)=>{
+  console.log("api hit")
+  live_price()
+  res.send(metal_price)
+})
+
 const update = async () => {
   try {
     await pool.query(
       "UPDATE public.new_combination_test SET fine_troy_ounce =$1, fine_weight =$2,  troyounce_gold =$3 WHERE new_code =$4",
       [fine_troy_ounce, fine_weight, troyounce_gold, newcode]
     );
-    console.log("updated");
+    console.log("updated New combination");
   } catch (error) {
-    console.log(error, "error");
+    console.log(error, "error in updating New Combination");
+  }
+};
+const update_linkbbp = async () => {
+  try {
+    await pool.query(
+      "UPDATE public.link_bbp_test SET fine_troy_ounce =$1, fine_weight =$2,  troy_ounce_content =$3 WHERE new_code =$4",
+      [fine_troy_ounce_linkBBP, fine_weight_linkBBP, troyounce_gold_linkBBP, newcode]
+    );
+    console.log("updated Link bbp");
+  } catch (error) {
+    console.log(error, "error in updating Link BBP");
   }
 };
 
@@ -257,11 +292,33 @@ const update_test = async (e) => {
     );
     update();
   });
+
+};
+
+const update_test_linkbbp = async (e) => {
+
+  all_LinkBBP?.forEach((value) => {
+    newcode = value.new_code;
+    fine_troy_ounce_linkBBP = rouundoff(
+      (value.gross_weight * value.fineness) / 31.1034768 / 1000
+    );
+    fine_weight_linkBBP = rouundoff((value.gross_weight * value.fineness) / 1000);
+    troyounce_gold_linkBBP = rouundoff(fine_weight / 31.1034768);
+    console.log(
+      newcode,
+      fine_troy_ounce_linkBBP,
+      fine_weight_linkBBP,
+      troyounce_gold_linkBBP,
+      "newcode + other values of link BBP"
+    );
+    update_linkbbp();
+  });
 };
 
 setInterval(() => {
   update_test();
-}, 90000);
+  // update_test_linkbbp();
+}, 60000);
 
 app.listen(port, () => {
   console.log(`listining at port ${port}`);

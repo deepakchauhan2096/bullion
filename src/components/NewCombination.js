@@ -11,6 +11,8 @@ const NewCombination = () => {
   const [show, setShow] = useState(false);
   const [hit, setHit] = useState(false);
   const [price, setPrice] = useState();
+ const [storePriceFromAPI, setStorePriceFromAPI]=useState()
+
 
   let mj_sell_rate;
   let newcode;
@@ -28,7 +30,7 @@ const NewCombination = () => {
     const interval = setInterval(() => {
       setHit(true);
     }, 300000);
-
+    getPriceFromAPI()
     return () => clearInterval(interval);
   }, []);
 
@@ -65,16 +67,6 @@ const NewCombination = () => {
     }
   };
 
-  const update_test = () => {
-    data2?.forEach((value) => {
-      newcode = value.new_code;
-      mj_sell_rate = value.mj_sell_rate + 1;
-      troyounce_gold = value.troyounce_gold + 1;
-      console.log(newcode, mj_sell_rate, troyounce_gold, "newcode");
-      update();
-      console.log(newcode, mj_sell_rate, troyounce_gold, "newcode");
-    });
-  };
 
   var to_Delete = "";
   const delete_element = (element) => {
@@ -87,20 +79,34 @@ const NewCombination = () => {
     console.log(formValues);
   };
 
-  const change_value = (value) => {
-    console.log(value, "value");
-    // setTest(value)
-    var one_row = data2.find((o) => o.new_code === value);
-    console.log(one_row, "one roww");
-    setFormValues([...formValues, one_row]);
-    console.log(formValues);
-  };
 
-  const live_price = () => {
-  fetch("https://b595-54-81-131-170.ngrok.io/liveprice")
-      .then((res) => res.json())
-      .then((data) => setPrice(data));
-    console.log(price, "live price");
+
+  const getPriceFromAPI = () => {
+    // setLoader(true)
+    fetch("http://localhost:4000/liveprice")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("data supplier > ", data)
+      
+      let uniqueElements = [...new Set(data.map(item => item.metal))];
+      console.log(uniqueElements)
+      
+      let temp = []
+      uniqueElements.map((el) => {
+        temp.push(data.filter((e) => e.metal == el).filter((e) => Object.keys(e.currency)[0] == "GBP")[0])
+        
+        console.log("temp : ", temp)
+      })
+      
+      setStorePriceFromAPI(temp)
+   console.log(storePriceFromAPI,"store price")
+      
+    }).catch((err)=>{
+      console.log("err : ",err)
+      alert("getPriceFromAPI API not working");
+      // setLoader(false)
+    });
+    // console.log(data2, "all data");
   };
 
 
@@ -171,8 +177,7 @@ const NewCombination = () => {
     uplift_fixed_price: row.uplift_fixed_price,
   }));
 
-  //setInterval(()=>{alldata()} , 65000);
-  // setInterval(()=>{setHit(true)} , 65000);
+
 
   return (
     < >
@@ -180,6 +185,7 @@ const NewCombination = () => {
       {" "}
       <Sidebar />
 
+
       <button
         style={{
           padding: 10,
@@ -192,31 +198,51 @@ const NewCombination = () => {
           fontFamily: "roboto",
           border: "none",
         }}
-        // onClick={alldata}
-      >
-        ⟳ Refresh
-      </button>
-      <button
-        style={{
-          padding: 10,
-          fontSize: 15,
-          width: 120,
-          background: "#2F82D6",
-          borderRadius: 12,
-          margin: 10,
-          color: "#fff",
-          fontFamily: "roboto",
-          border: "none",
-        }}
-        // onClick={live_price}
+        onClick={getPriceFromAPI}
       >
         Fetch live price
       </button>
 
+      <div style={{ display: "flex" , float:"right", padding:10 }}>
+            <table>
+              <thead>
+              
+                <tr>
+                <th style={{fontSize:"13px"}}></th>
+                {storePriceFromAPI?.map((e) => 
+                   <th>
+                    <p style={{fontSize:"13px",margin:"0"}}>{e.metal}</p>
+                    </th>
+                  )}
+                 
+                  
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+              <td  style={{fontSize:"13px",margin:"0"}}>bid</td>
+              
+              {storePriceFromAPI?.map((e) => 
+               <td>
+                  <p style={{fontSize:"13px",margin:"0"}}>{e.currency.GBP.bid}</p>
+                  </td>
+                )}
+                </tr>
+              <tr>
+              <td style={{fontSize:"13px",margin:"0"}}>Offer</td>
+              
+              {storePriceFromAPI?.map((e) => 
+           <td>
+                  <p style={{fontSize:"13px",margin:"0"}}>{e.currency.GBP.offer}</p>
+                  </td>
+                )}
+                </tr>
+              </tbody>
+            </table>
 
-     <br />
-     <Divider sx={{backgroundColor:"black",}}/>
-     <br />
+          </div>
+
+
 
       {data2 ? (
         <DataGrid
