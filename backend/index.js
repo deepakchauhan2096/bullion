@@ -245,7 +245,7 @@ const live_price = async () => {
 };
 
 app.get("/liveprice", cors(), async(req, res)=>{
-  console.log("api hit")
+  console.log("live price api hit")
   live_price()
   res.send(metal_price)
 })
@@ -296,14 +296,14 @@ const update_test = async (e) => {
 };
 
 const update_test_linkbbp = async (e) => {
-
+  await getall_data(); // to be revoved later
   all_LinkBBP?.forEach((value) => {
     newcode = value.new_code;
     fine_troy_ounce_linkBBP = rouundoff(
-      (value.gross_weight * value.fineness) / 31.1034768 / 1000
+      (value.gross_weight * value.finess) / 31.1034768 / 1000
     );
-    fine_weight_linkBBP = rouundoff((value.gross_weight * value.fineness) / 1000);
-    troyounce_gold_linkBBP = rouundoff(fine_weight / 31.1034768);
+    fine_weight_linkBBP = rouundoff((value.gross_weight * value.finess) / 1000);
+    troyounce_gold_linkBBP = rouundoff(fine_weight_linkBBP / 31.1034768);
     console.log(
       newcode,
       fine_troy_ounce_linkBBP,
@@ -316,9 +316,9 @@ const update_test_linkbbp = async (e) => {
 };
 
 setInterval(() => {
-  update_test();
-  // update_test_linkbbp();
-}, 60000);
+  // update_test(); 
+  update_test_linkbbp();
+}, 10000);
 
 app.listen(port, () => {
   console.log(`listining at port ${port}`);
