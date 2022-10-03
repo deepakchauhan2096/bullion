@@ -17,10 +17,26 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 let all; //  all data from new combination
-let all_LinkBBP;  // all data from link BBP
+let all_LinkBBP; // all data from link BBP
 let full_code;
 let popular;
 let metal_price;
+
+// to gbp and avrage
+let gold_bid;
+let gold_offer;
+let silver_bid;
+let silver_offer;
+
+let gold_bid_int;
+let gold_offer_int;
+let silver_bid_int;
+let silver_offer_int;
+
+let gold_avg;
+let silver_avg;
+
+let purchase_rate_formula_based;
 
 let bm_minted_value;
 let mj_pamp_value;
@@ -32,23 +48,23 @@ let bbp_pamp_formula_value;
 let testarr = {};
 
 // all calculaed values for new combination.
-let mj_sell_rate; 
+let mj_sell_rate;
 let newcode;
 let troyounce_gold;
 let fine_troy_ounce;
 let gross_weight;
 let fineness;
 let fine_weight;
+let metal_cost_api;
 
 // all calculaed values for link bbp.
-let mj_sell_rate_linkBBP; 
+let mj_sell_rate_linkBBP;
 let newcode_linkBBP;
 let troyounce_gold_linkBBP;
 let fine_troy_ounce_linkBBP;
 let gross_weight_linkBBP;
 let fineness_linkBBP;
 let fine_weight_linkBBP;
-
 
 const rouundoff = (value) => {
   var return_value = Math.round((value + Number.EPSILON) * 100) / 100;
@@ -64,11 +80,10 @@ const getall_data = async () => {
     const alldata_linkBBP = await pool.query(
       "SELECT * FROM public.link_bbp_test"
     );
-    all_LinkBBP= alldata_linkBBP.rows;
+    all_LinkBBP = alldata_linkBBP.rows;
     all = alldata.rows;
     console.log(all, "set running");
     console.log(all_LinkBBP, "link bbp data");
-
   } catch (error) {
     console.log(error, "error");
   }
@@ -95,9 +110,9 @@ app.get("/all_suppliers", cors(), async (req, res) => {
       "SELECT supplier_id , supplier_name, supplier_email, phone_1, phone_2 FROM public.add_supplier_form"
     );
     res.json(alldata);
-    console.log( "set running");
+    console.log("set running");
   } catch (error) {
-    res.send(error)
+    res.send(error);
     console.log(error, "error");
   }
 });
@@ -233,10 +248,21 @@ app.post("/suppliers", cors(), async (req, res) => {
 const live_price = async () => {
   try {
     await axios
-      .get("https://4f36-54-81-131-170.ngrok.io/liveprice")
+      .get("https://6955-54-81-131-170.ngrok.io/liveprice")
       .then((resp) => {
         metal_price = resp.data;
-        console.log(metal_price[0], "metal price");
+        gold_bid = metal_price[0].currency.GBP.bid;
+        gold_offer = metal_price[0].currency.GBP.offer;
+        silver_bid = metal_price[5].currency.GBP.bid;
+        silver_offer = metal_price[5].currency.GBP.offer;
+
+        gold_bid_int = parseFloat(gold_bid.replace(",", "")) / 31.103478;
+        gold_offer_int = parseFloat(gold_offer.replace(",", "")) / 31.103478;
+        silver_bid_int = parseFloat(silver_bid.replace(",", "")) / 31.103478;
+        silver_offer_int =
+          parseFloat(silver_offer.replace(",", "")) / 31.103478;
+        gold_avg = (gold_bid_int + gold_offer_int) / 2;
+        silver_avg = (silver_bid_int + silver_offer_int) / 2;
         // fs.writeFileSync("datafile.json", JSON.stringify(metal_price));
       });
   } catch (error) {
@@ -244,17 +270,24 @@ const live_price = async () => {
   }
 };
 
-app.get("/liveprice", cors(), async(req, res)=>{
-  console.log("live price api hit")
-  live_price()
-  res.send(metal_price)
-})
+app.get("/liveprice", cors(), async (req, res) => {
+  console.log("live price api hit");
+  live_price();
+  res.send(metal_price);
+});
 
 const update = async () => {
   try {
     await pool.query(
-      "UPDATE public.new_combination_test SET fine_troy_ounce =$1, fine_weight =$2,  troyounce_gold =$3 WHERE new_code =$4",
-      [fine_troy_ounce, fine_weight, troyounce_gold, newcode]
+      "UPDATE public.new_combination_test SET fine_troy_ounce =$1, fine_weight =$2,  troyounce_gold =$3, metal_cost_api=$4, purchase_rate_formula =$5 WHERE new_code =$6",
+      [
+        fine_troy_ounce,
+        fine_weight,
+        troyounce_gold,
+        metal_cost_api,
+        purchase_rate_formula_based,
+        newcode,
+      ]
     );
     console.log("updated New combination");
   } catch (error) {
@@ -265,7 +298,12 @@ const update_linkbbp = async () => {
   try {
     await pool.query(
       "UPDATE public.link_bbp_test SET fine_troy_ounce =$1, fine_weight =$2,  troy_ounce_content =$3 WHERE new_code =$4",
-      [fine_troy_ounce_linkBBP, fine_weight_linkBBP, troyounce_gold_linkBBP, newcode]
+      [
+        fine_troy_ounce_linkBBP,
+        fine_weight_linkBBP,
+        troyounce_gold_linkBBP,
+        newcode,
+      ]
     );
     console.log("updated Link bbp");
   } catch (error) {
@@ -283,20 +321,36 @@ const update_test = async (e) => {
     );
     fine_weight = rouundoff((value.gross_weight * value.fineness) / 1000);
     troyounce_gold = rouundoff(fine_weight / 31.1034768);
+    if (value.metal_type === "GOLD") {
+      metal_cost_api = rouundoff(fine_weight * gold_avg);
+      console.log("gold");
+    } else {
+      if (value.metal_type === "SILVER") {
+        metal_cost_api = rouundoff(fine_weight * silver_avg);
+        console.log("silver");
+      }
+    }
+    purchase_rate_formula_based = rouundoff(
+      metal_cost_api * (1 + value.baird_pamp / 100)
+    );
+
     console.log(
       newcode,
-      fine_troy_ounce,
-      fine_weight,
-      troyounce_gold,
+      // fine_troy_ounce,
+      // fine_weight,
+      // troyounce_gold,
+      // metal_cost_api,
+      purchase_rate_formula_based,
+
       "newcode + other values"
     );
     update();
   });
-
 };
 
 const update_test_linkbbp = async (e) => {
   await getall_data(); // to be revoved later
+  await live_price(); //to get all live price
   all_LinkBBP?.forEach((value) => {
     newcode = value.new_code;
     fine_troy_ounce_linkBBP = rouundoff(
@@ -316,8 +370,8 @@ const update_test_linkbbp = async (e) => {
 };
 
 setInterval(() => {
-  // update_test(); 
-  update_test_linkbbp();
+  update_test();
+  // update_test_linkbbp();
 }, 10000);
 
 app.listen(port, () => {
