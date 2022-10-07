@@ -103,7 +103,7 @@ const NewCombination = () => {
       
     }).catch((err)=>{
       console.log("err : ",err)
-      alert("getPriceFromAPI API not working");
+      // alert("getPriceFromAPI API not working");
       // setLoader(false)
     });
     // console.log(data2, "all data");

@@ -14,6 +14,7 @@ import BullionReciept from "./components/BullionReciept";
 import Dashboard from "./components/Dashboard";
 import { dataContext } from "./helpers/context";
 import ClientData from "./components/ClientData";
+import PDF_Creation from "./components/PDF_Creation";
 
 const drawerWidth = 280;
 
@@ -54,6 +55,7 @@ const drawerWidth = 280;
         <Route path="/BullionReciept" element={<BullionReciept />} />
         <Route path="/home" element={<Dashboard />} />
         <Route path="/clientdata" element={<ClientData />} />
+        <Route path="/PDF_Creation" element={<PDF_Creation />} />
       </Routes>
     </Router>
   </Section>

@@ -114,7 +114,8 @@ const Dashboard = () => {
   };
 
   const handle_ok = () => {
-    navigate('/')
+    setFormValues(body)
+    navigate('/clientdata')
   };
 
   const columns = [

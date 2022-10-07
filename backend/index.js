@@ -3,6 +3,7 @@ const app = express();
 const port = 4000;
 const cors = require("cors");
 const axios = require("axios");
+
 const pool = require("./db");
 const fs = require("fs");
 
@@ -37,6 +38,8 @@ let gold_avg;
 let silver_avg;
 
 let purchase_rate_formula_based;
+let mj_sell_rate_to_update;
+let ppb_bm_internal_use;
 
 let bm_minted_value;
 let mj_pamp_value;
@@ -65,6 +68,10 @@ let fine_troy_ounce_linkBBP;
 let gross_weight_linkBBP;
 let fineness_linkBBP;
 let fine_weight_linkBBP;
+let metal_cost_api_linkBBP;
+let sell_price_formula_LinkBBP;
+let bbp_margin_live_link_LinkBBP;
+let bbp_bm_internal_use_LinkBBP;
 
 const rouundoff = (value) => {
   var return_value = Math.round((value + Number.EPSILON) * 100) / 100;
@@ -279,13 +286,15 @@ app.get("/liveprice", cors(), async (req, res) => {
 const update = async () => {
   try {
     await pool.query(
-      "UPDATE public.new_combination_test SET fine_troy_ounce =$1, fine_weight =$2,  troyounce_gold =$3, metal_cost_api=$4, purchase_rate_formula =$5 WHERE new_code =$6",
+      "UPDATE public.new_combination_test SET fine_troy_ounce =$1, fine_weight =$2,  troyounce_gold =$3, metal_cost_api=$4, purchase_rate_formula =$5 ,mj_sell_rate=$6,ppb_internal_use=$7 WHERE new_code =$8",
       [
         fine_troy_ounce,
         fine_weight,
         troyounce_gold,
         metal_cost_api,
         purchase_rate_formula_based,
+        mj_sell_rate_to_update,
+        ppb_bm_internal_use,
         newcode,
       ]
     );
@@ -297,11 +306,15 @@ const update = async () => {
 const update_linkbbp = async () => {
   try {
     await pool.query(
-      "UPDATE public.link_bbp_test SET fine_troy_ounce =$1, fine_weight =$2,  troy_ounce_content =$3 WHERE new_code =$4",
+      "UPDATE public.link_bbp_test SET fine_troy_ounce =$1, fine_weight =$2,  troy_ounce_content =$3, metal_cost_api=$4,sell_price_formula=$5,bbp_margin_live_link=$6, ppb_internal_use=$7 WHERE new_code =$8",
       [
         fine_troy_ounce_linkBBP,
         fine_weight_linkBBP,
         troyounce_gold_linkBBP,
+        metal_cost_api_linkBBP,
+        sell_price_formula_LinkBBP,
+        bbp_margin_live_link_LinkBBP,
+        ppb_bm_internal_use,
         newcode,
       ]
     );
@@ -333,6 +346,12 @@ const update_test = async (e) => {
     purchase_rate_formula_based = rouundoff(
       metal_cost_api * (1 + value.baird_pamp / 100)
     );
+    mj_sell_rate_to_update = rouundoff(
+      purchase_rate_formula_based * (1 + value.mj_margin / 100)
+    );
+    ppb_bm_internal_use = rouundoff(
+      mj_sell_rate_to_update - purchase_rate_formula_based
+    );
 
     console.log(
       newcode,
@@ -340,8 +359,9 @@ const update_test = async (e) => {
       // fine_weight,
       // troyounce_gold,
       // metal_cost_api,
-      purchase_rate_formula_based,
-
+      // purchase_rate_formula_based,
+      mj_sell_rate_to_update,
+      ppb_bm_internal_use,
       "newcode + other values"
     );
     update();
@@ -349,8 +369,8 @@ const update_test = async (e) => {
 };
 
 const update_test_linkbbp = async (e) => {
-  await getall_data(); // to be revoved later
-  await live_price(); //to get all live price
+  // await getall_data(); // to be revoved later
+  // await live_price(); //to get all live price
   all_LinkBBP?.forEach((value) => {
     newcode = value.new_code;
     fine_troy_ounce_linkBBP = rouundoff(
@@ -358,21 +378,38 @@ const update_test_linkbbp = async (e) => {
     );
     fine_weight_linkBBP = rouundoff((value.gross_weight * value.finess) / 1000);
     troyounce_gold_linkBBP = rouundoff(fine_weight_linkBBP / 31.1034768);
+    metal_cost_api_linkBBP = rouundoff(value.gross_weight * gold_avg);
+    sell_price_formula_LinkBBP = rouundoff(
+      metal_cost_api_linkBBP * (1 + value.bbp_cost_formula / 100)
+    );
+    bbp_margin_live_link_LinkBBP = rouundoff(
+      (value.bbp_sell_price_link.replace(",", "") - metal_cost_api_linkBBP) /
+        metal_cost_api_linkBBP
+    );
+
+    ppb_bm_internal_use = rouundoff(
+      value.bbp_sell_price_link.replace(",", "") - sell_price_formula_LinkBBP
+    );
     console.log(
       newcode,
       fine_troy_ounce_linkBBP,
       fine_weight_linkBBP,
       troyounce_gold_linkBBP,
+      metal_cost_api_linkBBP,
+      sell_price_formula_LinkBBP,
+      bbp_margin_live_link_LinkBBP,
+      ppb_bm_internal_use,
       "newcode + other values of link BBP"
     );
     update_linkbbp();
   });
 };
 
+
 setInterval(() => {
-  update_test();
+  // update_test();
   // update_test_linkbbp();
-}, 10000);
+}, 90000);
 
 app.listen(port, () => {
   console.log(`listining at port ${port}`);
