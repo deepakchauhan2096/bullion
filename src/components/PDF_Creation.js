@@ -272,24 +272,27 @@ function PDF_Creation() {
                     data={products_info}
                 >
                     <TableHeader>
-                        <TableCell style={styles.productTableHeading} >ITEM</TableCell>
-                        <TableCell style={styles.productTableHeading} >ITEM TYPE</TableCell>
-                        <TableCell style={styles.productTableHeading} >PRODUCT SUB CAT.</TableCell>
-                        <TableCell style={styles.productTableHeading} >WT EST</TableCell>
-                        <TableCell style={styles.productTableHeading} >REF SU</TableCell>
-                        <TableCell style={styles.productTableHeading} >SIZE</TableCell>
-                        <TableCell style={styles.productTableHeading} >METAL</TableCell>
-                        <TableCell style={styles.productTableHeading} >PRICE</TableCell>
+                        <TableCell style={styles.productTableHeading} >Code</TableCell>
+                        <TableCell style={styles.productTableHeading} >discription</TableCell>
+                        <TableCell style={styles.productTableHeading} >BM MINTED</TableCell>
+                        <TableCell style={styles.productTableHeading} >MJ PAMP</TableCell>
+                        <TableCell style={styles.productTableHeading} >QNT Value</TableCell>
+                        <TableCell style={styles.productTableHeading} >BBP BV LINK PRICE</TableCell>
+                        <TableCell style={styles.productTableHeading} >BBP PAMP FORMULA PRICE</TableCell>
+                        <TableCell style={styles.productTableHeading} >BBP PAMP LINK PRICE</TableCell>
+                        <TableCell style={styles.productTableHeading} >BBP PAMP FORMULA</TableCell>
+
                     </TableHeader>
                     <TableBody>
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.item} />
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.item_type_selected} />
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.product_sub_cat_selected} />
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.Wt_est} />
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.supplier_selected} />
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.product_size_selected} />
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.metal_selected} />
-                        <DataTableCell style={styles.productTableText} getContent={(r) => r.price} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.code} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.description} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.bm_minted_value} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.mj_pamp_value} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.quant} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.bbp_bv_link_price_value} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.bbp_bv_formula_price_value} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.bbp_pamp_link_price_value} />
+                        <DataTableCell style={styles.productTableText} getContent={(r) => r.bbp_pamp_formula_value} />
 
                     </TableBody>
                 </Table>

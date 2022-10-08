@@ -269,7 +269,7 @@ const ClientData = () => {
                     setLoader(false)
                 } else {
                     alert("Data Insert Successfully")
-
+                    setLoader(false)
 
                     // setFormData((prev) => {
                     //     return { ...prev, client_id: parseInt(data.res.rows[0].client_id),TodayDate:location.state[0].TodayDate }
@@ -302,7 +302,7 @@ const ClientData = () => {
                     //         setLoader(false)
                     //     });
 
-                    //    navigate('/PDF_Creation',{state:{products:location.state,customer_info:formData}})
+                      navigate('/PDF_Creation',{state:{products:formValues,customer_info:formData}})
 
                 }
             }).catch((err) => {
