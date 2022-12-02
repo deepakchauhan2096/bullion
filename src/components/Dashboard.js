@@ -3,6 +3,10 @@ import { dataContext } from "../helpers/context";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
+import Bullion_invoice from "./Bullion_invoice";
+
+
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [alllist, setAllList] = useState();
@@ -20,7 +24,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const allListdata = () => {
-      fetch("http://localhost:4000/full_products_code")
+      fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/full_products_code`)
         .then((res) => res.json())
         .then((data) =>
           setAllList(
@@ -33,7 +37,7 @@ const Dashboard = () => {
     allListdata();
 
     const populardata = () => {
-      fetch("http://localhost:4000/popular_products_code")
+      fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/popular_products_code`)
         .then((res) => res.json())
         .then((data) =>
           setPopularList(
@@ -86,7 +90,7 @@ const Dashboard = () => {
       } else {
         setShow(true)
         console.log(value2, " list value");
-        const response = await fetch("http://localhost:4000/suppliers", {
+        const response = await fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/suppliers`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -217,7 +221,7 @@ const Dashboard = () => {
     <div style={{ padding: 20 }}>
       {/* <Navbar /> */}
       <Sidebar />
-     
+      <Bullion_invoice/>
       {ispopular ? (
         <select
           style={{

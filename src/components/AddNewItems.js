@@ -47,7 +47,7 @@ export default function AddNewItems() {
 
     useEffect(() => {
         const alldata = () => {
-          fetch("http://localhost:4000/all")
+          fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/all`)
             .then((res) => res.json())
             .then((data) => setData(data.rows));
           console.log(data2, "all data");
@@ -63,7 +63,7 @@ export default function AddNewItems() {
     
       if (hit === true) {
         const alldata = () => {
-          fetch("http://localhost:4000/all")
+          fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/all`)
             .then((res) => res.json())
             .then((data) => setData(data.rows));
           console.log(data2, "all data hhhhhh");

@@ -54,7 +54,7 @@ export default function AddSuppliers() {
   };
 
   useEffect(()=>{
-    fetch("http://localhost:4000/all_suppliers")
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/all_suppliers`)
     .then((res) => res.json())
     .then((data) =>
     setAllsuppliers(data.rows)
@@ -100,7 +100,7 @@ export default function AddSuppliers() {
 
   const add_supplier = async () => {
     console.log(supplier_data);
-    const response = await fetch("http://localhost:4000/add_suppliers", {
+    const response = await fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/add_suppliers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -118,7 +118,7 @@ export default function AddSuppliers() {
         alert("please select valid option")
     }
     else{
-        const response = await fetch("http://localhost:4000/update_suppliers", {
+        const response = await fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/update_suppliers`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

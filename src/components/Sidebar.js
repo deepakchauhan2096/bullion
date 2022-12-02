@@ -76,26 +76,33 @@ function Sidebar(props) {
                 </ListItem>
             </List>
             <Divider />
-            <List>
+            {/* <List>
                 <ListItem>
                     <LeakAdd />
                     <Links to='/listbbp' >BBP</Links>
                 </ListItem>
             </List>
-            <Divider />
+            <Divider /> */}
             <List>
                 <ListItem>
                     <PersonAdd />
-                    {/* <AddSuppliers /> */}
+                 
                     <Links to='/userformaddsupplier' >Add Supplier</Links>
                 </ListItem>
             </List>
             <Divider />
             <List>
+                <ListItem >
+                    <PersonOutlineIcon />
+                    <Links to='/Client_balance' >Client Balance</Links>
+                </ListItem>
+            </List>
+            <Divider />
+            {/* <List>
                 <ListItem>
                     <PostAdd />
                     <Links to='/addnewitem' >Add New Item</Links>
-                    {/* <AddNewItems /> */}
+                
                 </ListItem>
             </List>
             <Divider />
@@ -105,7 +112,7 @@ function Sidebar(props) {
                     <Links to='/inquiry' >Inquiry</Links>
                 </ListItem>
             </List>
-            <Divider />
+            <Divider /> 
             <List>
                 <ListItem>
                     <Dvr /><Links to='/ordertosupplier' >Order To Supplier</Links>
@@ -138,7 +145,7 @@ function Sidebar(props) {
                     <Links to='/clientdata' >Client</Links>
                 </ListItem>
             </List>
-            <Divider />
+            <Divider />*/}
         </div >
     );
 

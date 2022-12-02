@@ -20,10 +20,16 @@ const NewCombination = () => {
 
   useEffect(() => {
     const alldata = () => {
-      fetch("http://localhost:4000/all")
+      try {
+        fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/all`)
         .then((res) => res.json())
         .then((data) => setData(data.rows));
       console.log(data2, "all data");
+        
+      } catch (error) {
+        console.log(error,"error in api")
+      }
+     
     };
     alldata();
 
@@ -36,7 +42,7 @@ const NewCombination = () => {
 
   if (hit === true) {
     const alldata = () => {
-      fetch("http://localhost:4000/all")
+      fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/all`)
         .then((res) => res.json())
         .then((data) => setData(data.rows));
       console.log(data2, "all data");
@@ -53,7 +59,7 @@ const NewCombination = () => {
 
   const update = async (e) => {
     try {
-      const response = await fetch(`http://localhost:4000/update/${newcode}`, {
+      const response = await fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/update/${newcode}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,7 +89,7 @@ const NewCombination = () => {
 
   const getPriceFromAPI = () => {
     // setLoader(true)
-    fetch("http://localhost:4000/liveprice")
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/liveprice`)
     .then((res) => res.json())
     .then((data) => {
       console.log("data supplier > ", data)
@@ -261,7 +267,7 @@ const NewCombination = () => {
       )}
       <div className="container-fluid add-table g-0 table-container">
         <div className=" overflow-scroll">
-        
+        {/* <button onClick={()=> console.log(data2) } >click to console</button> */}
         </div>
         <div className="delete-button-class"></div>
       </div>

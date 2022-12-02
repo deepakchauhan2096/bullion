@@ -15,6 +15,9 @@ import Dashboard from "./components/Dashboard";
 import { dataContext } from "./helpers/context";
 import ClientData from "./components/ClientData";
 import PDF_Creation from "./components/PDF_Creation";
+import Client_balance from "./components/Client_balance";
+
+
 
 const drawerWidth = 280;
 
@@ -56,6 +59,8 @@ const drawerWidth = 280;
         <Route path="/home" element={<Dashboard />} />
         <Route path="/clientdata" element={<ClientData />} />
         <Route path="/PDF_Creation" element={<PDF_Creation />} />
+        <Route path="/Client_balance" element={ <Client_balance/> }/>
+
       </Routes>
     </Router>
   </Section>

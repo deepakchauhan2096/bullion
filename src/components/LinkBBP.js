@@ -16,7 +16,7 @@ const [data2,setData] = useState()
 
 
   const alldata =()=>{
-    fetch("http://localhost:4000/all")
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:4000/all`)
       .then((res) => res.json())
       .then((data) => setData(data));
       console.log(data2.rows)
