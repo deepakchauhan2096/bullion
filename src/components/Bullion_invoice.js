@@ -179,6 +179,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [clientid, setClientid] = useState([]);
+  const [images, setImages] = useState([]);
   const [order_type, setOrder_type] = useState("Inquiry");
   const houseref = useRef();
   const townref = useRef();
@@ -256,7 +257,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
 
   console.log(globleData, "globleData Plain_J_Invoice");
   console.log("location : ", location.state);
-
+// This function change user data in state(formData)!
   function handleChange(key, value) {
     console.log(value, "value");
     if (key === "consent") {
@@ -270,7 +271,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
       };
     });
   }
-
+// This is to genrate invisible recaptcha!
   const genrate_recapcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
       "sign-in-button",
@@ -284,7 +285,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
       authentication
     );
   };
-
+// self explanatory (send phone otp) !
   const Send_Otp = () => {
     console.log("clicked");
     setOpen_otp(true);
@@ -301,7 +302,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
         console.log(error);
       });
   };
-
+// This function  verify phone otp !
   const verify_otp = () => {
     let confirmationResult = window.confirmationResult;
     confirmationResult
@@ -317,7 +318,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
         setMessage(false);
       });
   };
-
+// This function send email otp
   async function login(emailId) {
     setEmailopen_otp(true);
     let res = await Auth(emailId, "MULJIS");
@@ -327,7 +328,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
     console.log(res.OTP);
     console.log(res.success);
   }
-
+// This funtion verify email otp !
   const verify_email_otp = () => {
     console.log(email_otp, "&", otp, "email and otp ");
     if (email_otp == otp) {
@@ -349,7 +350,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
   const refreshPage = () => {
     window.location.reload();
   };
-
+// This funtion saves data in database!
   const saveDataInDB = () => {
     console.log("formData : ", formData);
 
@@ -509,7 +510,7 @@ const Bullion_invoice = forwardRef((props, ref) => {
 
     console.log("end");
   };
-
+// This function add all price of client payments like bank amount, card amount etc!
   const total_price_calculate = () => {
     FormValue?.map((e) => {
       totalPriceTemp += parseFloat(e.total_price);
@@ -534,6 +535,29 @@ const Bullion_invoice = forwardRef((props, ref) => {
     console.log(totalPriceTemp, total_paid, "totalPriceTemp and total_paid");
   };
   total_price_calculate();
+
+  //   This function convert selected  images to base64.
+  const handleImages = (e) => {
+    for (let index = 0; index < e.target.files.length; index++) {
+      const element = e.target.files[index];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImages((current) => [...current, reader.result.toString()]);
+      };
+      reader.readAsDataURL(element);
+    }
+  };
+  // This function delete whatever, you give it !
+  var to_Delete = "";
+  const delete_element = (cellValues) => {
+    to_Delete = cellValues;
+    var filteredArray = images.filter(function (e) {
+      return e !== to_Delete;
+    });
+    setImages(filteredArray);
+    console.log(images);
+  };
+
 
   const columns = [
     { field: "code", headerName: "ct_number", width: 120 },
@@ -1227,12 +1251,79 @@ const Bullion_invoice = forwardRef((props, ref) => {
                     </tbody>
                   </table>
 
-                { order_type=="Order" ? <div>
-                    <label for="ID_1"> ID's Check : </label>
-                    <input type="file" name="ID_1  " multiple/>
-                    <button>Submit</button>
-                  </div>:null }  
+                  {order_type == "Order" ? (
+                    <div
+                      style={{
+                        background: "#fff",
+                        width: "90%",
+                        padding: 10,
+                        margin: "2%",
+                        borderRadius: "10px",
+                        border: "0.5px solid #fff",
+                        boxShadow:
+                          "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                      }}
+                    >
+                      <label for="ID_1" style={{color:"blue"}}> ID's Check : {images.length} Selcted </label>
+                      <br />
+                      <input
+                        style={{ margin: "2%" }}
+                        type="file"
+                        name="ID_1  "
+                        multiple
+                        onChange={(e) => handleImages(e)}
+                      />
 
+                      {/* <button
+                        style={{
+                          background: "#fff",
+                          color: "#1976D2",
+                          border: "1px solid",
+                        }}
+                        onClick={() => console.log(images)}
+                      >
+                        Show
+                      </button> */}
+                      {images ? (
+                        <div>
+                          {images.map((e, index) => (
+                            <div
+                              style={{
+                                borderRadius: "10px",
+                                border: "1px solid black",
+                                margin: "2%",
+                              }}
+                            >
+                              <img
+                                src={e}
+                                style={{
+                                  borderRadius: "10px",
+                                  width: "100%",
+                                  height: "100%",
+                                }}
+                              />
+                              <center>
+                                <button
+                                onClick={()=>delete_element(e)}
+                                  style={{
+                                    borderRadius: "10px",
+                                    background: "#fff",
+                                    color: "red",
+                                    width: "80%",
+                                    border: "none",
+                                    margin: "2%",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Delete 🗑️
+                                </button>
+                              </center>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
