@@ -73,6 +73,9 @@ let sell_price_formula_LinkBBP;
 let bbp_margin_live_link_LinkBBP;
 let bbp_bm_internal_use_LinkBBP;
 
+//anurag's calculations for price_with_formula table name to_be_deleted
+
+
 const rouundoff = (value) => {
   var return_value = Math.round((value + Number.EPSILON) * 100) / 100;
   return return_value;
