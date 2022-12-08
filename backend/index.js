@@ -74,12 +74,92 @@ let bbp_margin_live_link_LinkBBP;
 let bbp_bm_internal_use_LinkBBP;
 
 //anurag's calculations for price_with_formula table name to_be_deleted
+let  to_be_deleted;
 
+let metal_cost;
+let formula_price;
 
 const rouundoff = (value) => {
   var return_value = Math.round((value + Number.EPSILON) * 100) / 100;
   return return_value;
 };
+
+app.get("/full_products_code", cors(), async (req, res) => {
+  try {
+    const alldata = await pool.query("SELECT * FROM public.full_code");
+    res.json(alldata);
+    full_code = alldata.rows;
+    console.log("ALL DATA API");
+  } catch (error) {
+    console.log(error, "error");
+  }
+});
+
+
+///Anurag.................................Start...................................
+
+//  1. => this function is for the  offer price of Gold in usa 
+
+
+const getGoldPrice = async()=>{
+ await axios.get("https://8f53-54-152-44-91.ngrok.io/liveprice").then((res)=>{
+    metal_cost =res.data.filter((e)=>e.metal=="Gold" && Object.keys(e.currency)[0]=="USD")[0].currency.USD.offer
+    console.log("Gold Price in USA : =>",metal_cost)
+  }).catch((err)=>{
+    console.log("err : ",err)
+  })
+}
+
+//2. => This function is for the get the data from the table of database 
+
+const deletedData = async () => {
+  try {
+    const alldata = await pool.query("SELECT * FROM public.to_be_deleted");
+     to_be_deleted = alldata.rows;
+    console.log(to_be_deleted, "ALL data of to_be_deleted from table");
+  
+    updatedValues();
+  } catch (error) {
+    console.log(error, "error");
+  }
+};
+deletedData();
+
+
+//3. =>  This function is for the updating the changes in the database table 
+
+const update_del =  () => {
+  try {
+     pool.query(
+      "UPDATE public.to_be_deleted SET price_formula = $1 WHERE mj_code =$2",
+      [formula_price, mj_code]
+    );
+  } catch (error) {
+    console.log(error, "error in updating New to be deleted");
+  }
+
+};
+// update_del();
+
+// 4. => This fucntion is for the calculations 
+
+const updatedValues = async (e) => {
+  to_be_deleted?.forEach((value) => {
+    mj_code = value.mj_code;
+    formula_price = rouundoff((value.weight * metal_cost*(value.margin_percentage+1)));
+    update_del();
+    
+    console.log(
+      mj_code,
+      formula_price, 
+      "=>:mj code & Formula price"
+      );
+    
+  });
+};
+updatedValues();
+
+/////Anurag end...............................................................
 
 const getall_data = async () => {
   try {
@@ -258,7 +338,7 @@ app.post("/suppliers", cors(), async (req, res) => {
 const live_price = async () => {
   try {
     await axios
-      .get("https://6955-54-81-131-170.ngrok.io/liveprice")
+      .get("https://8f53-54-152-44-91.ngrok.io/liveprice")
       .then((resp) => {
         metal_price = resp.data;
         gold_bid = metal_price[0].currency.GBP.bid;
@@ -306,6 +386,7 @@ const update = async () => {
     console.log(error, "error in updating New Combination");
   }
 };
+
 const update_linkbbp = async () => {
   try {
     await pool.query(
@@ -408,11 +489,12 @@ const update_test_linkbbp = async (e) => {
   });
 };
 
-
 setInterval(() => {
   // update_test();
+ 
+  update_del();
   // update_test_linkbbp();
-}, 90000);
+}, 9000);
 
 app.listen(port, () => {
   console.log(`listining at port ${port}`);
