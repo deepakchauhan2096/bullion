@@ -83,6 +83,7 @@ let formula_price;
 let offer;
 let bid;
 let average;
+let margin_percentages;
 
 let gold_avg_cost;
 
@@ -115,11 +116,11 @@ const getGoldPrice = async () => {
       )[0].currency.USD;
       metal_cost_offer = api_cost_data.offer;
       metal_cost_bid = api_cost_data.bid;
-       offer = metal_cost_offer.replace(",", "");
-       bid = metal_cost_bid.replace(",", "");
-      gold_avg_cost = parseFloat(offer) + parseFloat(bid);
-      average = parseFloat(gold_avg_cost)/2
+      bid = parseFloat(metal_cost_bid.replace(",", "")) / 45.68;
+      offer = parseFloat(metal_cost_offer.replace(",", "")) / 45.68;
 
+      gold_avg_cost = (offer + bid) / 2;
+      average = gold_avg_cost / 2;
     })
     .catch((err) => {
       console.log("err : ", err);
@@ -130,7 +131,9 @@ const getGoldPrice = async () => {
 
 const deletedData = async () => {
   try {
-    const alldata = await pool.query("SELECT * FROM public.bbp_o_competitor_best_value");
+    const alldata = await pool.query(
+      "SELECT * FROM public.bbp_o_competitor_best_value"
+    );
     to_be_deleted = alldata.rows;
     console.log(to_be_deleted, "ALL data of to_be_deleted from table");
 
@@ -159,10 +162,18 @@ const update_del = () => {
 
 const updatedValues = async (e) => {
   await getGoldPrice();
-  to_be_deleted?.forEach((value) => {   
+  to_be_deleted?.forEach((value) => {
     mj_code = value.mj_code;
+    margin_percentages = value.margin_percentage * 100;
+    console.log(
+      "margin% yahi hai:>",
+      margin_percentages,
+      "weight:=>",
+      value.weight,
+      "average:=>"
+    );
     formula_price = rouundoff(
-      value.weight * average * (value.margin_percentage + 1)
+      value.weight * average * (margin_percentages + 1)
     );
     update_del();
     console.log(
@@ -364,10 +375,10 @@ const live_price = async () => {
 
         gold_bid_int = parseFloat(gold_bid.replace(",", "")) / 31.103478;
         gold_offer_int = parseFloat(gold_offer.replace(",", "")) / 31.103478;
+        gold_avg = (gold_bid_int + gold_offer_int) / 2;
         silver_bid_int = parseFloat(silver_bid.replace(",", "")) / 31.103478;
         silver_offer_int =
           parseFloat(silver_offer.replace(",", "")) / 31.103478;
-        gold_avg = (gold_bid_int + gold_offer_int) / 2;
         silver_avg = (silver_bid_int + silver_offer_int) / 2;
         // fs.writeFileSync("datafile.json", JSON.stringify(metal_price));
       });
