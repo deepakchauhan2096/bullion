@@ -78,13 +78,11 @@ let to_be_deleted;
 let api_cost_data;
 let metal_cost_offer;
 let metal_cost_bid;
-let metal_cost_avg;
 let formula_price;
 let offer;
 let bid;
 let average;
 let margin_percentages;
-
 let gold_avg_cost;
 
 const rouundoff = (value) => {
@@ -103,7 +101,7 @@ app.get("/full_products_code", cors(), async (req, res) => {
   }
 });
 
-///Anurag.................................Start...................................
+///~~~~~~~~~~~~~~~~~~~~~~~~~.....Anurag's Code..~~~~~~~~~~~~~~~~~~`....Start...................................
 
 //  1. => this function is for the  offer price of Gold in usa
 
@@ -112,15 +110,18 @@ const getGoldPrice = async () => {
     .get("https://8f53-54-152-44-91.ngrok.io/liveprice")
     .then((res) => {
       api_cost_data = res.data?.filter(
-        (e) => e.metal == "Gold" && Object.keys(e.currency)[0] == "USD"
-      )[0].currency.USD;
+        (e) => e.metal == "Gold" && Object.keys(e.currency)[0] == "GBP"
+      )[0].currency.GBP;
       metal_cost_offer = api_cost_data.offer;
       metal_cost_bid = api_cost_data.bid;
-      bid = parseFloat(metal_cost_bid.replace(",", "")) / 45.68;
-      offer = parseFloat(metal_cost_offer.replace(",", "")) / 45.68;
+      console.log("latest data offer", metal_cost_offer);
+      console.log("latest data bid", metal_cost_bid);
 
-      gold_avg_cost = (offer + bid) / 2;
-      average = gold_avg_cost / 2;
+      bid = parseFloat(metal_cost_bid.replace(",", ""));
+      offer = parseFloat(metal_cost_offer.replace(",", ""));
+      gold_avg_cost = ((offer + bid) / 2)/31.103478;
+      
+      console.log(" test-lates:=>", gold_avg_cost);
     })
     .catch((err) => {
       console.log("err : ", err);
@@ -129,20 +130,49 @@ const getGoldPrice = async () => {
 
 //2. => This function is for the get the data from the table of database
 
-const deletedData = async () => {
+const gettingTableData = async () => {
   try {
-    const alldata = await pool.query(
+    const bbp_comp_bv = await pool.query(
       "SELECT * FROM public.bbp_o_competitor_best_value"
     );
-    to_be_deleted = alldata.rows;
-    console.log(to_be_deleted, "ALL data of to_be_deleted from table");
+    compititor_bvData = bbp_comp_bv.rows;
+    console.log(compititor_bvData, "`````````````````bestValue table Data");
+
+    // 2nd table .............Metalor 
+    const metalor = await pool.query(
+      "SELECT * FROM public.bbp_o_competitor_metalor"
+    );
+    metalorData = metalor.rows
+    console.log("~~~~~~metalor' Data~:=>",metalorData);
+
+    // 3rd ========= bbp_o_competitor_v_suisse
+
+    const comVsuisse = await pool.query(
+      "SELECT * FROM public.bbp_o_competitor_v_suisse"
+    );
+    vSuisseData = comVsuisse.rows
+    console.log("#######--------Vsuisse's Data:=>",vSuisseData);
+
+
+    // 4th  =========== bbp_o_competitor_pamp
+
+
+    const comPamp = await pool.query(
+      "SELECT * FROM public.bbp_o_competitor_pamp"
+    );
+    comPmpData = comPamp.rows
+    console.log("__________________Pamp's Data:=>",comPmpData);
+
+
+
+
 
     updatedValues();
   } catch (error) {
     console.log(error, "error");
   }
 };
-deletedData();
+gettingTableData();
 
 //3. =>  This function is for the updating the changes in the database table
 
@@ -156,13 +186,13 @@ const update_del = () => {
     console.log(error, "error in updating New to be deleted");
   }
 };
-// update_del();
+
 
 // 4. => This fucntion is for the calculations
 
 const updatedValues = async (e) => {
   await getGoldPrice();
-  to_be_deleted?.forEach((value) => {
+  compititor_bvData?.forEach((value) => {
     mj_code = value.mj_code;
     margin_percentages = value.margin_percentage * 100;
     console.log(
@@ -172,9 +202,7 @@ const updatedValues = async (e) => {
       value.weight,
       "average:=>"
     );
-    formula_price = rouundoff(
-      value.weight * average * (margin_percentages + 1)
-    );
+    formula_price = rouundoff(value.weight * gold_avg_cost * (margin_percentages + 1));
     update_del();
     console.log(
       mj_code,
