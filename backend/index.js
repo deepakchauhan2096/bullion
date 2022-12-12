@@ -7,6 +7,8 @@ const axios = require("axios");
 const pool = require("./db");
 const fs = require("fs");
 
+const console = require('console');
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const corsOptions = {
@@ -84,6 +86,7 @@ let bid;
 let average;
 let margin_percentages;
 let gold_avg_cost;
+let comPampData;
 
 const rouundoff = (value) => {
   var return_value = Math.round((value + Number.EPSILON) * 100) / 100;
@@ -107,21 +110,21 @@ app.get("/full_products_code", cors(), async (req, res) => {
 
 const getGoldPrice = async () => {
   await axios
-    .get("https://8f53-54-152-44-91.ngrok.io/liveprice")
+    .get("https://6998-54-152-44-91.ngrok.io/liveprice")
     .then((res) => {
       api_cost_data = res.data?.filter(
         (e) => e.metal == "Gold" && Object.keys(e.currency)[0] == "GBP"
       )[0].currency.GBP;
       metal_cost_offer = api_cost_data.offer;
       metal_cost_bid = api_cost_data.bid;
-      console.log("latest data offer", metal_cost_offer);
-      console.log("latest data bid", metal_cost_bid);
+      // console.log("latest data offer", metal_cost_offer);
+      // console.log("latest data bid", metal_cost_bid);
 
       bid = parseFloat(metal_cost_bid.replace(",", ""));
       offer = parseFloat(metal_cost_offer.replace(",", ""));
       gold_avg_cost = ((offer + bid) / 2)/31.103478;
       
-      console.log(" test-lates:=>", gold_avg_cost);
+      console.log(" gold average price:=>", gold_avg_cost);
     })
     .catch((err) => {
       console.log("err : ", err);
@@ -136,14 +139,15 @@ const gettingTableData = async () => {
       "SELECT * FROM public.bbp_o_competitor_best_value"
     );
     compititor_bvData = bbp_comp_bv.rows;
-    console.log(compititor_bvData, "`````````````````bestValue table Data");
+    console.log("~~~~~~~~~~~~~Best value table Data :=>",compititor_bvData);
+   
 
     // 2nd table .............Metalor 
     const metalor = await pool.query(
       "SELECT * FROM public.bbp_o_competitor_metalor"
     );
     metalorData = metalor.rows
-    console.log("~~~~~~metalor' Data~:=>",metalorData);
+    console.log("~~~~~~metalor table Data~:=>",metalorData);
 
     // 3rd ========= bbp_o_competitor_v_suisse
 
@@ -151,21 +155,16 @@ const gettingTableData = async () => {
       "SELECT * FROM public.bbp_o_competitor_v_suisse"
     );
     vSuisseData = comVsuisse.rows
-    console.log("#######--------Vsuisse's Data:=>",vSuisseData);
+    console.log("#######--------Vsuisse's  table Data:=>",vSuisseData);
 
 
     // 4th  =========== bbp_o_competitor_pamp
-
 
     const comPamp = await pool.query(
       "SELECT * FROM public.bbp_o_competitor_pamp"
     );
     comPmpData = comPamp.rows
-    console.log("__________________Pamp's Data:=>",comPmpData);
-
-
-
-
+    console.table("__________________Pamp'sbsdcshb Data:=>",comPmpData);
 
     updatedValues();
   } catch (error) {
@@ -181,36 +180,86 @@ const update_del = () => {
     pool.query(
       "UPDATE public.bbp_o_competitor_best_value SET price_formula = $1 WHERE mj_code =$2",
       [formula_price, mj_code]
+    ); 
+
+    pool.query(
+      "UPDATE public.bbp_o_competitor_metalor SET price_formula = $1 WHERE mj_code =$2",
+      [formula_price, mj_code]
     );
+
+    pool.query(
+      "UPDATE public.bbp_o_competitor_v_suisse SET price_formula = $1 WHERE mj_code =$2",
+      [formula_price, mj_code]
+    );
+
+    pool.query(
+      "UPDATE public.bbp_o_competitor_pamp SET price_formula = $1 WHERE mj_code =$2",
+      [formula_price, mj_code]
+    );
+
   } catch (error) {
     console.log(error, "error in updating New to be deleted");
   }
 };
 
 
+
+
 // 4. => This fucntion is for the calculations
 
 const updatedValues = async (e) => {
   await getGoldPrice();
+
+// for best value  table data...................
+
   compititor_bvData?.forEach((value) => {
     mj_code = value.mj_code;
     margin_percentages = value.margin_percentage * 100;
-    console.log(
-      "margin% yahi hai:>",
-      margin_percentages,
-      "weight:=>",
-      value.weight,
-      "average:=>"
-    );
+    // console.log("margin% yahi hai:>",margin_percentages,"weight:=>",value.weight,"average:=>"
+    // );
     formula_price = rouundoff(value.weight * gold_avg_cost * (margin_percentages + 1));
     update_del();
-    console.log(
-      mj_code,
-      "required-Value",
-      formula_price,
-      "=>:mj code & Formula price"
-    );
+    console.log(mj_code," 1------------------required-Value",formula_price,"=>:mj code & Formula price");
   });
+
+// for metalor  table data...................
+
+  metalorData?.forEach((value) => {
+    mj_code = value.mj_code;
+    margin_percentages = value.margin_percentage * 100;
+    // console.log(" 2.........```````````````~~margin% yahi hai:>",margin_percentages,"weight:=>",value.weight,"average:=>"
+    // );
+    formula_price = rouundoff(value.weight * gold_avg_cost * (margin_percentages + 1));
+    update_del();
+    console.log(mj_code," 2------required-Value",formula_price,"=>:mj code &  metalorData Formula price");
+  });
+
+// for vsuisse  table data...................
+
+
+  vSuisseData?.forEach((value) => {
+    mj_code = value.mj_code;
+    margin_percentages = value.margin_percentage * 100;
+    // console.log(" 3~~~~~~~~~~~margin% yahi hai:>",margin_percentages,"weight:=>",value.weight,"average:=>" );
+    formula_price = rouundoff(value.weight * gold_avg_cost * (margin_percentages + 1));
+    update_del();
+    console.log(mj_code,"3`````-----required-Value",formula_price,"=>:mj code & Formula price");
+  });
+
+
+//  for pamp table data ........................
+comPmpData?.forEach((value) => {
+    mj_code = value.mj_code;
+    margin_percentages = value.margin_percentage * 100;
+    // console.log(" 4~~~~~~~~~~~~~~margin% yahi hai:>",margin_percentages,"weight:=>",value.weight,"average:=>"
+    // );
+    formula_price = rouundoff(value.weight * gold_avg_cost * (margin_percentages + 1));
+    update_del();
+    console.log(mj_code,"4------------------required-Value",formula_price,"=>:mj code & Formula price");
+  });
+
+
+
 };
 updatedValues();
 
